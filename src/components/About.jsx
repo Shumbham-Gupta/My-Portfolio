@@ -1,117 +1,153 @@
-
-
-import React, { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Float, OrbitControls, MeshDistortMaterial, Sphere, Stars } from "@react-three/drei";
+import React from "react";
 import { motion } from "framer-motion";
+import {
+  FaChartPie,
+  FaCode,
+  FaDatabase,
+  FaGraduationCap,
+  FaLaptopCode,
+  FaRocket,
+} from "react-icons/fa";
+
+const MotionH2 = motion.h2;
+const MotionP = motion.p;
+const MotionDiv = motion.div;
+
+const strengths = [
+  {
+    icon: FaLaptopCode,
+    title: "Full-Stack Development",
+    text: "Building responsive MERN applications with clean UI flows, API integration, and practical product thinking.",
+  },
+  {
+    icon: FaChartPie,
+    title: "Data Analytics",
+    text: "Turning raw data into dashboards, reports, and insights using Power BI, SQL, Excel, and analytical storytelling.",
+  },
+  {
+    icon: FaRocket,
+    title: "Project Ownership",
+    text: "Taking ideas from problem definition to working, deployed experiences with attention to usability and polish.",
+  },
+];
+
+const profileFacts = [
+  { label: "Focus", value: "MERN + Analytics" },
+  { label: "Education", value: "B.Tech CSE Graduate" },
+  { label: "Mindset", value: "Build, measure, improve" },
+];
+
+const quickStack = [
+  { icon: FaCode, label: "React, Tailwind, JavaScript" },
+  { icon: FaDatabase, label: "Node, Express, MongoDB" },
+  { icon: FaGraduationCap, label: "Power BI, SQL, Excel" },
+];
 
 const About = () => (
-  <section
-    id="about"
-    className="relative py-24 px-6 md:px-20 bg-linear-to-br from-black via-purple-950 to-black text-gray-300 overflow-hidden"
-  >
-    {/* Background Glows */}
-    <div className="absolute top-0 left-0 w-72 h-72 bg-purple-700/20 rounded-full blur-3xl"></div>
-    <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-600/20 rounded-full blur-3xl"></div>
+  <section id="about" className="relative overflow-hidden section-surface px-5 py-24 sm:px-6 lg:px-8">
+    <div className="absolute left-0 top-0 h-72 w-72 glow-purple rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 right-0 h-80 w-80 glow-cyan rounded-full blur-3xl"></div>
 
-    {/* ---------------- 3D AREA ---------------- */}
-    <div className="absolute inset-0 opacity-60 -z-10">
-      <Canvas camera={{ position: [0, 0, 5], fov: 55 }}>
-        <Suspense fallback={null}>
+    <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-500">
+            About Me
+          </p>
+          <MotionH2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6 }}
+            className="section-title text-4xl font-extrabold leading-tight md:text-5xl"
+          >
+            I Build Useful Web Experiences With Data-Aware Thinking
+          </MotionH2>
 
-          {/* 3D Stars Background */}
-          <Stars radius={40} depth={25} count={2000} factor={4} fade />
+          <MotionP
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ delay: 0.12, duration: 0.6 }}
+            className="mt-6 max-w-3xl text-base leading-relaxed text-[var(--color-muted)] md:text-lg"
+          >
+            I am a Full Stack MERN Developer and Data Analytics Enthusiast who enjoys
+            creating clean, responsive, and interactive digital products. My work sits
+            between engineering and insight: building reliable web apps while also using
+            data to understand patterns and support better decisions.
+          </MotionP>
 
-          {/* Floating Neon Cube / Sphere */}
-          <Float speed={2} rotationIntensity={1.4} floatIntensity={1.5}>
-            <Sphere args={[1.2, 64, 64]} position={[2, -1, -1]}>
-              <MeshDistortMaterial
-                color="#8B5CF6"
-                emissive="#8B5CF6"
-                emissiveIntensity={0.7}
-                distort={0.4}
-                speed={2}
-              />
-            </Sphere>
-          </Float>
+          <MotionP
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-4 max-w-3xl text-base leading-relaxed text-[var(--color-subtle)]"
+          >
+            I focus on practical implementation, modern UI, secure authentication flows,
+            API-driven apps, and dashboards that communicate clearly.
+          </MotionP>
 
-          {/* Neon Cyan Blob */}
-          <Float speed={2.5} rotationIntensity={1.3} floatIntensity={1.3}>
-            <Sphere args={[0.9, 64, 64]} position={[-2, 1, -1]}>
-              <MeshDistortMaterial
-                color="#22d3ee"
-                emissive="#22d3ee"
-                emissiveIntensity={0.6}
-                distort={0.5}
-                speed={1.5}
-              />
-            </Sphere>
-          </Float>
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {profileFacts.map((fact) => (
+              <MotionDiv
+                key={fact.label}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl border border-[var(--color-border)] bg-white/10 p-4 shadow-[var(--shadow-soft)] backdrop-blur"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-cyan-500">
+                  {fact.label}
+                </p>
+                <p className="mt-2 text-sm font-bold text-[var(--color-text)]">{fact.value}</p>
+              </MotionDiv>
+            ))}
+          </div>
+        </div>
 
-          <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.7} />
-        </Suspense>
-      </Canvas>
-    </div>
+        <MotionDiv
+          initial={{ opacity: 0, x: 28 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.65 }}
+          className="themed-card rounded-3xl border p-5 sm:p-6"
+        >
+          <div className="grid gap-4">
+            {strengths.map(({ icon, title, text }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-[var(--color-border)] bg-white/10 p-5"
+              >
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-purple-600/20 to-cyan-500/20 text-cyan-500">
+                    {React.createElement(icon)}
+                  </span>
+                  <h3 className="text-lg font-bold text-[var(--color-text)]">{title}</h3>
+                </div>
+                <p className="text-sm leading-relaxed text-[var(--color-muted)]">{text}</p>
+              </div>
+            ))}
+          </div>
 
-    {/* ---------------- CONTENT ---------------- */}
-    <div className="relative z-10 max-w-5xl mx-auto text-center">
-      {/* Title */}
-      <motion.h2
-        initial={{ opacity: 0, y: 25 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl md:text-5xl font-extrabold mb-8 text-transparent 
-        bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400 
-        drop-shadow-[0_0_15px_#8B5CF6]"
-      >
-        About Me
-      </motion.h2>
-
-      {/* Intro Text */}
-      <motion.p
-        initial={{ opacity: 0, y: 25 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="text-lg md:text-xl leading-relaxed text-gray-400 max-w-3xl mx-auto"
-      >
-        I’m a <span className="text-purple-400 font-semibold">Full Stack (MERN) Developer</span> and 
-        <span className="text-cyan-400 font-semibold"> Data Analytics Enthusiast</span> who loves creating
-        interactive, scalable, and visually rich web experiences.
-        I work with 
-        <span className="text-cyan-400 font-semibold"> React.js</span>, 
-        <span className="text-cyan-400 font-semibold"> Node.js</span>, 
-        <span className="text-cyan-400 font-semibold"> Express.js</span>, 
-        <span className="text-cyan-400 font-semibold"> MongoDB</span>, and 
-        <span className="text-cyan-400 font-semibold"> Tailwind CSS</span>.
-        I blend <span className="text-purple-400 font-semibold">design</span>,
-        <span className="text-purple-400 font-semibold"> logic</span>, and 
-        <span className="text-purple-400 font-semibold"> data</span> to build beautiful and intelligent applications.
-      </motion.p>
-
-      {/* Secondary Text */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.8 }}
-        className="mt-6 text-gray-500 max-w-3xl mx-auto text-base md:text-lg"
-      >
-        I also explore <span className="text-cyan-400 font-semibold">Data Analytics</span> to uncover insights
-        and transform raw data into meaningful visualizations.  
-        My goal is to create digital experiences that are visually stunning,
-        intuitive, and driven by real data.
-      </motion.p>
-
-      {/* Glowing Divider */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 1 }}
-        className="mt-10 w-40 h-1 mx-auto bg-linear-to-r from-purple-500 to-cyan-400 
-        rounded-full shadow-[0_0_20px_#8B5CF6]"
-      ></motion.div>
+          <div className="mt-5 rounded-2xl border border-[var(--color-border)] bg-linear-to-r from-purple-700/10 to-cyan-700/10 p-5">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-purple-500">
+              Current Toolkit
+            </p>
+            <div className="grid gap-3">
+              {quickStack.map(({ icon, label }) => (
+                <div key={label} className="flex items-center gap-3 text-sm font-medium text-[var(--color-text)]">
+                  <span className="text-cyan-500">{React.createElement(icon)}</span>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </MotionDiv>
+      </div>
     </div>
   </section>
 );
 
 export default About;
-
