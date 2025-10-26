@@ -35,8 +35,8 @@ const projects = [
   description:
     "An interactive Power BI dashboard analyzing electric vehicle sales data. Provides visual insights, trend analysis, and actionable metrics to support data-driven decisions in the EV market.",
   tech: ["Power BI", "SQL", "Excel"],
-  github: "#",
-  demo: "#",
+  github: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
+  demo: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
 }
 ,
 ];
