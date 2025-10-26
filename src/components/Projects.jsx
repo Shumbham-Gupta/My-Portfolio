@@ -17,8 +17,8 @@ const projects = [
   description:
     "A secure and scalable user authentication system built with the MERN stack. Implements signup, login, and protected routes using JWT and password hashing, ensuring safe and efficient user management for web applications.",
   tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "Bcrypt"],
-  github: "https://github.com/yourgithub/mern-auth-system",
-  demo: "#",
+  github: "https://github.com/Shumbham-Gupta/MERN_User_Authentication_System",
+  demo: "https://user-authentication-system-frontend.onrender.com",
 }
 ,
   {
