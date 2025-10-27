@@ -9,8 +9,8 @@ const projects = [
   description:
     "An AI-powered virtual assistant built using the MERN stack and Google Gemini API — capable of understanding natural language, providing intelligent responses, and assisting with tasks interactively.",
   tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Google Gemini API"],
-  github: "https://github.com/yourgithub/ai-virtual-assistant",
-  demo: "#",
+  github: "https://github.com/Shumbham-Gupta/VirtualAssistant",
+  demo: "https://virtualassistant-frontend-c2hv.onrender.com",
 },
   {
   title: "User Authentication System",
@@ -26,8 +26,8 @@ const projects = [
   description:
     "A full-stack employee task management system built with the MERN stack. Allows admins to assign tasks, track progress, and monitor status, while employees can view, update, and manage their assigned tasks in real-time. Includes authentication, role-based access, and a responsive dark-themed interface.",
   tech: ["MongoDB", "Express.js", "React.js", "Node.js", "JWT", "Bcrypt"],
-  github: "https://github.com/yourgithub/employee-task-management",
-  demo: "#",
+  github: "https://github.com/Shumbham-Gupta",
+  demo: "https://github.com/Shumbham-Gupta",
 }
 ,
  {
