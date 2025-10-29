@@ -22,12 +22,12 @@ const projects = [
 }
 ,
   {
-  title: "Employee Task Management System",
-  description:
-    "A full-stack employee task management system built with the MERN stack. Allows admins to assign tasks, track progress, and monitor status, while employees can view, update, and manage their assigned tasks in real-time. Includes authentication, role-based access, and a responsive dark-themed interface.",
-  tech: ["MongoDB", "Express.js", "React.js", "Node.js", "JWT", "Bcrypt"],
-  github: "https://github.com/Shumbham-Gupta",
-  demo: "https://github.com/Shumbham-Gupta",
+  title: "Mock E-Commerce Cart",
+description:
+"A full-stack mock e-commerce shopping cart application built using the MERN stack. It enables users to browse products, add or remove items from their cart, view total prices, and perform a mock checkout process. The project demonstrates complete frontend-backend integration with MongoDB for data storage, Express and Node.js for API handling, and a React + Tailwind CSS frontend for a responsive, modern shopping experience.",
+tech: ["MongoDB", "Express.js", "React.js", "Node.js", "Axios", "Tailwind CSS"],
+  github: "https://github.com/Shumbham-Gupta/Mock-E-com-Cart",
+  demo: "https://mock-e-com-cart-frontend.onrender.com",
 }
 ,
  {
