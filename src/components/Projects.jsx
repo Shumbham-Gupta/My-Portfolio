@@ -39,6 +39,23 @@ tech: ["MongoDB", "Express.js", "React.js", "Node.js", "Axios", "Tailwind CSS"],
   demo: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
 }
 ,
+{
+  title: "Task Management Web App",
+  description:
+    "A full-stack task management application built using the MERN stack — featuring user authentication, secure login/signup, and an intuitive interface to create, update, organize, and track tasks efficiently.",
+  tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT Authentication"],
+  github: "https://github.com/Shumbham-Gupta/WebApp_Task_Manager",
+  demo: "https://webapp-task-manager-frontend.onrender.com",
+}
+,{
+  title: "Blinkit Sales Dashboard",
+  description:
+    "An interactive Power BI dashboard analyzing Blinkit's sales performance — featuring key metrics, category-wise revenue insights, customer trends, and data-driven visualizations to support business decision-making.",
+  tech: ["Power BI", "Power Query", "DAX", "Excel/CSV", "Data Modeling"],
+  github: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard",
+  demo: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard/blob/main/Blinkit_project_analysis.pbit",
+}
+
 ];
 
 const Projects = () => (

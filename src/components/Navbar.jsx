@@ -76,7 +76,8 @@ const Navbar = () => {
         >
           <FaLinkedin />
         </a>
-        <button
+        
+        {/* <button
           onClick={toggleTheme}
           className={`px-3 py-1 rounded-lg text-sm font-bold ${
             darkMode
@@ -85,7 +86,7 @@ const Navbar = () => {
           } hover:scale-110 transition`}
         >
           {darkMode ? "Light" : "Dark"}
-        </button>
+        </button> */}
 
         {/* Mobile Menu Button */}
         <div onClick={toggleNav} className="md:hidden cursor-pointer ml-2">
@@ -132,12 +133,12 @@ const Navbar = () => {
             >
               <FaLinkedin />
             </a>
-            <button
+            {/* <button
               onClick={toggleTheme}
               className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-600 to-cyan-600 text-white hover:scale-110 transition"
             >
               {darkMode ? "Light" : "Dark"}
-            </button>
+            </button> */}
           </div>
         </motion.div>
       )}

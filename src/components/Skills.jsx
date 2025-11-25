@@ -12,6 +12,10 @@ const skills = [
   "Node.js",
   "Express.js",
   "MongoDB",
+  "Git & GitHub",
+  "RESTful APIs",
+  "JWT Authentication",
+  "Excel",
 ];
 
 const Skills = () => (
