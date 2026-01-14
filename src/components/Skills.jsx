@@ -1,21 +1,21 @@
-
 import React from "react";
 import { motion } from "framer-motion";
+import SkillItem from "./SkillItem";
 
-const skills = [
-  "React.js",
-  "TailwindCSS",
-  "JavaScript",
-  "Python",
-  "SQL",
-  "Power BI",
-  "Node.js",
-  "Express.js",
-  "MongoDB",
-  "Git & GitHub",
-  "RESTful APIs",
-  "JWT Authentication",
-  "Excel",
+const skillsData = [
+  { name: "React.js", proficiency: 92 },
+  { name: "JavaScript", proficiency: 90 },
+  { name: "TailwindCSS", proficiency: 88 },
+  { name: "Node.js", proficiency: 85 },
+  { name: "Express.js", proficiency: 83 },
+  { name: "MongoDB", proficiency: 82 },
+  { name: "Python", proficiency: 85 },
+  { name: "SQL", proficiency: 84 },
+  { name: "RESTful APIs", proficiency: 87 },
+  { name: "Git & GitHub", proficiency: 89 },
+  { name: "JWT Authentication", proficiency: 81 },
+  { name: "Power BI", proficiency: 79 },
+  { name: "Excel", proficiency: 75 },
 ];
 
 const Skills = () => (
@@ -29,13 +29,13 @@ const Skills = () => (
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
     </div>
 
-    <div className="relative z-10 max-w-5xl mx-auto text-center">
+    <div className="relative z-10 max-w-4xl mx-auto">
       {/* Title */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl md:text-5xl font-extrabold mb-12 text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400 drop-shadow-[0_0_10px_#8B5CF6]"
+        className="text-4xl md:text-5xl font-extrabold mb-16 text-center text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400 drop-shadow-[0_0_10px_#8B5CF6]"
       >
         Skills
       </motion.h2>
@@ -45,19 +45,16 @@ const Skills = () => (
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.8 }}
-        className="flex flex-wrap justify-center gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
-        {skills.map((skill, index) => (
+        {skillsData.map((skill, index) => (
           <motion.div
-            key={skill}
-            whileHover={{
-              scale: 1.1,
-              boxShadow: "0px 0px 20px #8B5CF6",
-            }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="px-8 py-4 rounded-xl bg-linear-to-br from-purple-700/30 to-cyan-700/30 text-gray-200 font-medium text-lg border border-purple-500/30 shadow-[0_0_10px_#8B5CF6] hover:text-cyan-300 transition-all duration-300"
+            key={skill.name}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.6 }}
           >
-            {skill}
+            <SkillItem name={skill.name} proficiency={skill.proficiency} />
           </motion.div>
         ))}
       </motion.div>
@@ -66,8 +63,8 @@ const Skills = () => (
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-12 w-40 h-1 mx-auto bg-linear-to-r from-purple-500 to-cyan-400 rounded-full shadow-[0_0_15px_#8B5CF6]"
+        transition={{ delay: 0.8 }}
+        className="mt-16 w-40 h-1 mx-auto bg-linear-to-r from-purple-500 to-cyan-400 rounded-full shadow-[0_0_15px_#8B5CF6]"
       ></motion.div>
     </div>
   </section>
