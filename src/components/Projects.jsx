@@ -1,61 +1,70 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const projects = [
   {
-  title: "AI Virtual Assistant",
-  description:
-    "An AI-powered virtual assistant built using the MERN stack and Google Gemini API — capable of understanding natural language, providing intelligent responses, and assisting with tasks interactively.",
-  tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Google Gemini API"],
-  github: "https://github.com/Shumbham-Gupta/VirtualAssistant",
-  demo: "https://virtualassistant-frontend-c2hv.onrender.com",
-},
+    title: "AI Virtual Assistant",
+    description:
+      "An AI-powered virtual assistant built using the MERN stack and Google Gemini API — capable of understanding natural language, providing intelligent responses, and assisting with tasks interactively.",
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Google Gemini API"],
+    github: "https://github.com/Shumbham-Gupta/VirtualAssistant",
+    demo: "https://virtualassistant-frontend-c2hv.onrender.com",
+  },
   {
-  title: "User Authentication System",
-  description:
-    "A secure and scalable user authentication system built with the MERN stack. Implements signup, login, and protected routes using JWT and password hashing, ensuring safe and efficient user management for web applications.",
-  tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "Bcrypt"],
-  github: "https://github.com/Shumbham-Gupta/MERN_User_Authentication_System",
-  demo: "https://user-authentication-system-frontend.onrender.com",
-}
-,
+    title: "User Authentication System",
+    description:
+      "A secure and scalable user authentication system built with the MERN stack. Implements signup, login, and protected routes using JWT and password hashing, ensuring safe and efficient user management for web applications.",
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "Bcrypt"],
+    github: "https://github.com/Shumbham-Gupta/MERN_User_Authentication_System",
+    demo: "https://user-authentication-system-frontend.onrender.com",
+  },
   {
-  title: "Mock E-Commerce Cart",
-description:
-"A full-stack mock e-commerce shopping cart application built using the MERN stack. It enables users to browse products, add or remove items from their cart, view total prices, and perform a mock checkout process. The project demonstrates complete frontend-backend integration with MongoDB for data storage, Express and Node.js for API handling, and a React + Tailwind CSS frontend for a responsive, modern shopping experience.",
-tech: ["MongoDB", "Express.js", "React.js", "Node.js", "Axios", "Tailwind CSS"],
-  github: "https://github.com/Shumbham-Gupta/Mock-E-com-Cart",
-  demo: "https://mock-e-com-cart-frontend.onrender.com",
-}
-,
- {
-  title: "Electric Vehicle Sales Analysis",
-  description:
-    "An interactive Power BI dashboard analyzing electric vehicle sales data. Provides visual insights, trend analysis, and actionable metrics to support data-driven decisions in the EV market.",
-  tech: ["Power BI", "SQL", "Excel"],
-  github: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
-  demo: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
-}
-,
-{
-  title: "Task Management Web App",
-  description:
-    "A full-stack task management application built using the MERN stack — featuring user authentication, secure login/signup, and an intuitive interface to create, update, organize, and track tasks efficiently.",
-  tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT Authentication"],
-  github: "https://github.com/Shumbham-Gupta/WebApp_Task_Manager",
-  demo: "https://webapp-task-manager-frontend.onrender.com",
-}
-,{
-  title: "Blinkit Sales Dashboard",
-  description:
-    "An interactive Power BI dashboard analyzing Blinkit's sales performance — featuring key metrics, category-wise revenue insights, customer trends, and data-driven visualizations to support business decision-making.",
-  tech: ["Power BI", "Power Query", "DAX", "Excel/CSV", "Data Modeling"],
-  github: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard",
-  demo: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard/blob/main/Blinkit_project_analysis.pbit",
-}
-
+    title: "Mock E-Commerce Cart",
+    description:
+      "A full-stack mock e-commerce shopping cart application built using the MERN stack. It enables users to browse products, add or remove items from their cart, view total prices, and perform a mock checkout process. The project demonstrates complete frontend-backend integration with MongoDB for data storage, Express and Node.js for API handling, and a React + Tailwind CSS frontend for a responsive, modern shopping experience.",
+    tech: [
+      "MongoDB",
+      "Express.js",
+      "React.js",
+      "Node.js",
+      "Axios",
+      "Tailwind CSS",
+    ],
+    github: "https://github.com/Shumbham-Gupta/Mock-E-com-Cart",
+    demo: "https://mock-e-com-cart-frontend.onrender.com",
+  },
+  {
+    title: "Electric Vehicle Sales Analysis",
+    description:
+      "An interactive Power BI dashboard analyzing electric vehicle sales data. Provides visual insights, trend analysis, and actionable metrics to support data-driven decisions in the EV market.",
+    tech: ["Power BI", "SQL", "Excel"],
+    github:
+      "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
+    demo: "https://github.com/Shumbham-Gupta/Electric_Vehicle_Sales_Dashboard",
+  },
+  {
+    title: "Task Management Web App",
+    description:
+      "A full-stack task management application built using the MERN stack — featuring user authentication, secure login/signup, and an intuitive interface to create, update, organize, and track tasks efficiently.",
+    tech: [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "JWT Authentication",
+    ],
+    github: "https://github.com/Shumbham-Gupta/WebApp_Task_Manager",
+    demo: "https://webapp-task-manager-frontend.onrender.com",
+  },
+  {
+    title: "Blinkit Sales Dashboard",
+    description:
+      "An interactive Power BI dashboard analyzing Blinkit's sales performance — featuring key metrics, category-wise revenue insights, customer trends, and data-driven visualizations to support business decision-making.",
+    tech: ["Power BI", "Power Query", "DAX", "Excel/CSV", "Data Modeling"],
+    github: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard",
+    demo: "https://github.com/Shumbham-Gupta/BlinkIt_Sales_Dashboard/blob/main/Blinkit_project_analysis.pbit",
+  },
 ];
 
 const Projects = () => (
@@ -77,7 +86,7 @@ const Projects = () => (
         transition={{ duration: 0.6 }}
         className="text-4xl md:text-5xl font-extrabold mb-12 text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400 drop-shadow-[0_0_10px_#8B5CF6]"
       >
-        Projects
+        shubham gupta
       </motion.h2>
 
       {/* Project Cards */}
