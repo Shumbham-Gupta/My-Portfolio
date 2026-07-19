@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import useMobileCarousel from "../hooks/useMobileCarousel";
 import {
   FaArrowRight,
   FaChartLine,
@@ -91,133 +92,163 @@ const projectStats = [
   { value: "2", label: "BI dashboards" },
 ];
 
-const Projects = () => (
-  <section id="projects" className="relative py-24 px-5 sm:px-6 section-surface overflow-hidden">
-    <div className="absolute inset-0">
-      <div className="absolute top-1/4 left-0 h-72 w-72 glow-purple rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-1/5 right-0 h-72 w-72 glow-cyan rounded-full blur-3xl animate-pulse delay-700"></div>
-    </div>
+const Projects = () => {
+  const { trackRef, activeIndex, scrollToItem, pauseAutoplay, handleScroll } =
+    useMobileCarousel(projects.length);
 
-    <div className="relative z-10 mx-auto max-w-7xl">
-      <div className="mx-auto mb-14 max-w-3xl text-center">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-500">
-          Selected Work
-        </p>
-        <MotionH2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-extrabold section-title"
-        >
-          Projects That Show How I Build
-        </MotionH2>
-        <MotionP
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ delay: 0.15, duration: 0.6 }}
-          className="mt-5 text-base md:text-lg leading-relaxed text-[var(--color-muted)]"
-        >
-          A focused mix of full-stack applications and analytics dashboards, built to show practical
-          problem solving, clean UI thinking, and production-style integrations.
-        </MotionP>
+  return (
+    <section id="projects" className="relative py-24 px-5 sm:px-6 section-surface overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-0 h-72 w-72 glow-purple rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/5 right-0 h-72 w-72 glow-cyan rounded-full blur-3xl animate-pulse delay-700"></div>
       </div>
 
-      <div className="mx-auto mb-12 grid max-w-3xl grid-cols-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white/10 shadow-[var(--shadow-soft)] backdrop-blur">
-        {projectStats.map((stat) => (
-          <div key={stat.label} className="px-3 py-5 text-center">
-            <p className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
-              {stat.value}
-            </p>
-            <p className="mt-1 text-xs md:text-sm text-[var(--color-subtle)]">{stat.label}</p>
-          </div>
-        ))}
-      </div>
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-500">
+            Selected Work
+          </p>
+          <MotionH2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-extrabold section-title"
+          >
+            Projects That Show How I Build
+          </MotionH2>
+          <MotionP
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="mt-5 text-base md:text-lg leading-relaxed text-[var(--color-muted)]"
+          >
+            A focused mix of full-stack applications and analytics dashboards, built to show practical
+            problem solving, clean UI thinking, and production-style integrations.
+          </MotionP>
+        </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {projects.map((project, index) => {
-          const Icon = project.icon;
+        <div className="mx-auto mb-12 grid max-w-3xl grid-cols-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white/10 shadow-[var(--shadow-soft)] backdrop-blur">
+          {projectStats.map((stat) => (
+            <div key={stat.label} className="px-3 py-5 text-center">
+              <p className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-xs md:text-sm text-[var(--color-subtle)]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
 
-          return (
-            <MotionDiv
-              key={project.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: index * 0.08, duration: 0.55 }}
-              whileHover={{ y: -6 }}
-              className="group themed-card border rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.36)]"
-            >
-              <div className="flex h-full flex-col gap-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex min-w-0 items-center gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border)] bg-linear-to-br from-purple-600/20 to-cyan-500/20 text-cyan-500">
-                      <Icon className="text-xl" />
+        <div
+          ref={trackRef}
+          onScroll={handleScroll}
+          onPointerDown={pauseAutoplay}
+          onTouchStart={pauseAutoplay}
+          className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:snap-none lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:p-0"
+        >
+          {projects.map((project, index) => {
+            const Icon = project.icon;
+
+            return (
+              <MotionDiv
+                key={project.title}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: index * 0.08, duration: 0.55 }}
+                whileHover={{ y: -6 }}
+                className="group themed-card w-[86%] shrink-0 snap-center border rounded-2xl p-4 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.36)] sm:w-[68%] sm:p-6 md:w-[56%] lg:w-auto lg:shrink"
+              >
+                <div className="flex h-full flex-col gap-3.5 sm:gap-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex min-w-0 items-center gap-4">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border)] bg-linear-to-br from-purple-600/20 to-cyan-500/20 text-cyan-500 sm:h-12 sm:w-12">
+                        <Icon className="text-lg sm:text-xl" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-purple-500">{project.category}</p>
+                        <h3 className="mt-1 text-lg sm:text-2xl font-bold leading-tight text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
+                          {project.title}
+                        </h3>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-purple-500">{project.category}</p>
-                      <h3 className="mt-1 text-xl sm:text-2xl font-bold leading-tight text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
-                        {project.title}
-                      </h3>
-                    </div>
-                  </div>
-                  <span className="hidden sm:inline-flex rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold text-[var(--color-subtle)]">
-                    #{String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-
-                <p className="text-sm sm:text-base leading-relaxed text-[var(--color-muted)]">
-                  {project.description}
-                </p>
-
-                <div className="grid gap-2">
-                  {project.highlights.map((highlight) => (
-                    <div key={highlight} className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-                      <FaArrowRight className="shrink-0 text-xs text-cyan-500" />
-                      <span>{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-full border border-[var(--color-border)] bg-linear-to-r from-purple-700/15 to-cyan-700/15 px-3 py-1 text-xs sm:text-sm text-[var(--color-text)]"
-                    >
-                      {tech}
+                    <span className="hidden sm:inline-flex rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold text-[var(--color-subtle)]">
+                      #{String(index + 1).padStart(2, "0")}
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                <div className="mt-auto flex flex-col gap-3 pt-2 sm:flex-row">
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 px-4 py-3 text-sm font-semibold text-white shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_26px_rgba(34,211,238,0.45)]"
-                  >
-                    <FaExternalLinkAlt />
-                    Live Preview
-                  </a>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] px-4 py-3 text-sm font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-500"
-                  >
-                    <FaGithub />
-                    Source Code
-                  </a>
+                  <p className="line-clamp-3 text-sm sm:text-base leading-relaxed text-[var(--color-muted)] sm:line-clamp-none">
+                    {project.description}
+                  </p>
+
+                  <div className="grid gap-1.5 sm:gap-2">
+                    {project.highlights.map((highlight) => (
+                      <div key={highlight} className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-[var(--color-text)]">
+                        <FaArrowRight className="shrink-0 text-xs text-cyan-500" />
+                        <span>{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-full border border-[var(--color-border)] bg-linear-to-r from-purple-700/15 to-cyan-700/15 px-2.5 py-0.5 text-[11px] sm:px-3 sm:py-1 sm:text-sm text-[var(--color-text)]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-auto flex flex-row gap-2 pt-1 sm:gap-3 sm:pt-2">
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-white shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_26px_rgba(34,211,238,0.45)]"
+                    >
+                      <FaExternalLinkAlt />
+                      Live Preview
+                    </a>
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-500"
+                    >
+                      <FaGithub />
+                      Source Code
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </MotionDiv>
-          );
-        })}
+              </MotionDiv>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 flex items-center justify-center gap-2 lg:hidden">
+          {projects.map((project, index) => (
+            <button
+              key={project.title}
+              type="button"
+              aria-label={`Go to project ${index + 1}: ${project.title}`}
+              onClick={() => {
+                pauseAutoplay();
+                scrollToItem(index);
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === activeIndex
+                  ? "w-7 bg-linear-to-r from-purple-500 to-cyan-500"
+                  : "w-2 bg-slate-400/40 hover:bg-slate-400/70"
+              }`}
+            ></button>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default Projects;

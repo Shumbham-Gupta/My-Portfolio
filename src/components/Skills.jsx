@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import useMobileCarousel from "../hooks/useMobileCarousel";
 import {
   FaChartBar,
   FaCode,
@@ -61,7 +62,11 @@ const coreSkills = [
   "Clean Code",
 ];
 
-const Skills = () => (
+const Skills = () => {
+  const { trackRef, activeIndex, scrollToItem, pauseAutoplay, handleScroll } =
+    useMobileCarousel(skillGroups.length);
+
+  return (
   <section id="skills" className="relative overflow-hidden section-surface px-5 py-24 sm:px-6 lg:px-8">
     <div className="absolute inset-0">
       <div className="absolute left-1/4 top-1/4 h-72 w-72 glow-purple rounded-full blur-3xl animate-pulse"></div>
@@ -105,7 +110,13 @@ const Skills = () => (
         ))}
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div
+        ref={trackRef}
+        onScroll={handleScroll}
+        onPointerDown={pauseAutoplay}
+        onTouchStart={pauseAutoplay}
+        className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6 md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-5 md:overflow-visible md:p-0 xl:grid-cols-3"
+      >
         {skillGroups.map(({ title, icon, level, summary, skills }, index) => (
           <MotionDiv
             key={title}
@@ -114,7 +125,7 @@ const Skills = () => (
             viewport={{ once: true, amount: 0.25 }}
             transition={{ delay: index * 0.07, duration: 0.55 }}
             whileHover={{ y: -5 }}
-            className="themed-card rounded-3xl border p-5 transition-all duration-300 hover:shadow-[0_0_28px_rgba(34,211,238,0.34)]"
+            className="themed-card w-[86%] shrink-0 snap-center rounded-3xl border p-5 transition-all duration-300 hover:shadow-[0_0_28px_rgba(34,211,238,0.34)] sm:w-[68%] md:w-auto md:shrink"
           >
             <div className="mb-5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -152,8 +163,28 @@ const Skills = () => (
           </MotionDiv>
         ))}
       </div>
+
+      <div className="mt-6 flex items-center justify-center gap-2 md:hidden">
+        {skillGroups.map((group, index) => (
+          <button
+            key={group.title}
+            type="button"
+            aria-label={`Go to skill group ${index + 1}: ${group.title}`}
+            onClick={() => {
+              pauseAutoplay();
+              scrollToItem(index);
+            }}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === activeIndex
+                ? "w-7 bg-linear-to-r from-purple-500 to-cyan-500"
+                : "w-2 bg-slate-400/40 hover:bg-slate-400/70"
+            }`}
+          ></button>
+        ))}
+      </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Skills;

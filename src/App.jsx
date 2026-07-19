@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { MotionConfig } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -32,15 +33,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-page)] text-[var(--color-text)] transition-colors duration-500">
-      <Navbar isDark={isDark} onToggleTheme={toggleTheme} />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Contact />
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-[var(--color-page)] text-[var(--color-text)] transition-colors duration-500">
+        <Navbar isDark={isDark} onToggleTheme={toggleTheme} />
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }
 
