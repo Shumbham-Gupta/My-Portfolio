@@ -6,6 +6,24 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 5173
+    },
+    {
+      "name": "texia",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "C:/Users/shubh/Desktop/All folders/texia", "dev", "--port", "5174"],
+      "port": 5174
+    },
+    {
+      "name": "va-backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:/Users/shubh/Desktop/All folders/VirtualAssistant/backend", "run", "dev"],
+      "port": 5000
+    },
+    {
+      "name": "va-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:/Users/shubh/Desktop/All folders/VirtualAssistant/frontend", "run", "dev"],
+      "port": 5175
     }
   ]
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-scroll";
-import { FaArrowRight, FaChevronDown, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaArrowRight, FaChevronDown, FaDownload, FaGithub, FaLinkedin } from "react-icons/fa";
 import profilePic from "../assets/updatedProfile.webp";
 
 const MotionDiv = motion.div;
@@ -111,6 +111,16 @@ const Hero = () => {
               View Projects
               <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
+            <a
+              href="/Shubham_Gupta_Resume.pdf"
+              download="Shubham_Gupta_Resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-cyan-400/50 bg-cyan-500/10 px-6 py-3 text-base font-semibold text-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:bg-cyan-500/20 hover:shadow-[0_0_26px_rgba(34,211,238,0.4)]"
+            >
+              <FaDownload className="text-sm" />
+              Download CV
+            </a>
             <Link
               to="contact"
               smooth
@@ -128,7 +138,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: 36, scale: 0.94 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.9, ease: easeOutSmooth }}
-          className="relative mx-auto w-full max-w-[250px] sm:max-w-xs lg:max-w-sm"
+          className="relative mx-auto w-full max-w-[200px] sm:max-w-[240px] lg:max-w-[280px]"
         >
           <MotionDiv
             animate={{ y: [0, -10, 0] }}

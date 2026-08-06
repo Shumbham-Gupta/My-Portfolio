@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import useMobileCarousel from "../hooks/useMobileCarousel";
 import {
   FaArrowRight,
@@ -11,7 +11,15 @@ import {
   FaShoppingCart,
   FaTasks,
   FaRobot,
+  FaFilter,
 } from "react-icons/fa";
+
+import imgAiAssistant from "../assets/project_ai_assistant.png";
+import imgUserAuth from "../assets/project_user_auth.png";
+import imgEcommerce from "../assets/project_ecommerce_cart.png";
+import imgTaskManager from "../assets/project_task_manager.png";
+import imgEvSales from "../assets/project_ev_sales.png";
+import imgBlinkitSales from "../assets/project_blinkit_sales.png";
 
 const MotionH2 = motion.h2;
 const MotionP = motion.p;
@@ -21,7 +29,9 @@ const projects = [
   {
     title: "AI Virtual Assistant",
     category: "AI + MERN App",
+    group: "mern",
     icon: FaRobot,
+    image: imgAiAssistant,
     description:
       "A conversational virtual assistant that uses the MERN stack and Google Gemini API to understand natural language and return useful responses.",
     highlights: ["Natural language prompts", "Gemini API integration", "Interactive assistant UI"],
@@ -32,7 +42,9 @@ const projects = [
   {
     title: "User Authentication System",
     category: "Security Flow",
+    group: "mern",
     icon: FaShieldAlt,
+    image: imgUserAuth,
     description:
       "A secure authentication system with signup, login, protected routes, JWT handling, and password hashing for modern web apps.",
     highlights: ["JWT auth flow", "Protected routes", "Password hashing"],
@@ -43,7 +55,9 @@ const projects = [
   {
     title: "Mock E-Commerce Cart",
     category: "Full Stack Store",
+    group: "mern",
     icon: FaShoppingCart,
+    image: imgEcommerce,
     description:
       "A full-stack shopping cart with product browsing, cart updates, total calculation, and a mock checkout experience.",
     highlights: ["Cart state management", "Frontend-backend integration", "Responsive shopping UI"],
@@ -54,7 +68,9 @@ const projects = [
   {
     title: "Task Management Web App",
     category: "Productivity App",
+    group: "mern",
     icon: FaTasks,
+    image: imgTaskManager,
     description:
       "A MERN task manager with authentication and an interface to create, update, organize, and track tasks efficiently.",
     highlights: ["Authenticated workspace", "Task CRUD operations", "Clean productivity flow"],
@@ -65,7 +81,9 @@ const projects = [
   {
     title: "Electric Vehicle Sales Analysis",
     category: "Analytics Dashboard",
+    group: "analytics",
     icon: FaChartLine,
+    image: imgEvSales,
     description:
       "An interactive Power BI dashboard that analyzes EV sales data and turns market trends into clear visual insights.",
     highlights: ["Sales trend analysis", "Business insights", "Interactive report views"],
@@ -76,7 +94,9 @@ const projects = [
   {
     title: "Blinkit Sales Dashboard",
     category: "BI Reporting",
+    group: "analytics",
     icon: FaLayerGroup,
+    image: imgBlinkitSales,
     description:
       "A Power BI dashboard for Blinkit sales performance with key metrics, category insights, and decision-ready visualizations.",
     highlights: ["Revenue KPIs", "Category analysis", "Data modeling"],
@@ -92,9 +112,22 @@ const projectStats = [
   { value: "2", label: "BI dashboards" },
 ];
 
+const categoryTabs = [
+  { id: "all", label: "All Work" },
+  { id: "mern", label: "MERN Stack Apps" },
+  { id: "analytics", label: "Analytics & Power BI" },
+];
+
 const Projects = () => {
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  const filteredProjects =
+    activeCategory === "all"
+      ? projects
+      : projects.filter((p) => p.group === activeCategory);
+
   const { trackRef, activeIndex, scrollToItem, pauseAutoplay, handleScroll } =
-    useMobileCarousel(projects.length);
+    useMobileCarousel(filteredProjects.length);
 
   return (
     <section id="projects" className="relative py-24 px-5 sm:px-6 section-surface overflow-hidden">
@@ -104,7 +137,7 @@ const Projects = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="mx-auto mb-14 max-w-3xl text-center">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-500">
             Selected Work
           </p>
@@ -129,7 +162,7 @@ const Projects = () => {
           </MotionP>
         </div>
 
-        <div className="mx-auto mb-12 grid max-w-3xl grid-cols-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white/10 shadow-[var(--shadow-soft)] backdrop-blur">
+        <div className="mx-auto mb-10 grid max-w-3xl grid-cols-3 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white/10 shadow-[var(--shadow-soft)] backdrop-blur">
           {projectStats.map((stat) => (
             <div key={stat.label} className="px-3 py-5 text-center">
               <p className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
@@ -140,96 +173,131 @@ const Projects = () => {
           ))}
         </div>
 
-        <div
-          ref={trackRef}
-          onScroll={handleScroll}
-          onPointerDown={pauseAutoplay}
-          onTouchStart={pauseAutoplay}
-          className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:snap-none lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:p-0"
-        >
-          {projects.map((project, index) => {
-            const Icon = project.icon;
+        {/* Category Filter Tabs */}
+        <div className="mb-10 flex flex-wrap items-center justify-center gap-2.5">
+          {categoryTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveCategory(tab.id)}
+              type="button"
+              className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                activeCategory === tab.id
+                  ? "border-cyan-400 bg-linear-to-r from-purple-600 to-cyan-600 text-white shadow-[0_0_20px_rgba(34,211,238,0.4)]"
+                  : "border-[var(--color-border)] bg-white/10 text-[var(--color-text)] hover:border-cyan-400 hover:text-cyan-500"
+              }`}
+            >
+              <FaFilter className="text-xs" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-            return (
-              <MotionDiv
-                key={project.title}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: index * 0.08, duration: 0.55 }}
-                whileHover={{ y: -6 }}
-                className="group themed-card w-[86%] shrink-0 snap-center border rounded-2xl p-4 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.36)] sm:w-[68%] sm:p-6 md:w-[56%] lg:w-auto lg:shrink"
-              >
-                <div className="flex h-full flex-col gap-3.5 sm:gap-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-4">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border)] bg-linear-to-br from-purple-600/20 to-cyan-500/20 text-cyan-500 sm:h-12 sm:w-12">
-                        <Icon className="text-lg sm:text-xl" />
+        <AnimatePresence mode="wait">
+          <MotionDiv
+            key={activeCategory}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div
+              ref={trackRef}
+              onScroll={handleScroll}
+              onPointerDown={pauseAutoplay}
+              onTouchStart={pauseAutoplay}
+              className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:snap-none lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:p-0"
+            >
+              {filteredProjects.map((project, index) => {
+                const Icon = project.icon;
+
+                return (
+                  <MotionDiv
+                    key={project.title}
+                    initial={{ opacity: 0, y: 28 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ delay: index * 0.08, duration: 0.55 }}
+                    whileHover={{ y: -6 }}
+                    className="group themed-card w-[86%] shrink-0 snap-center border rounded-2xl p-4 transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.36)] sm:w-[68%] sm:p-5 md:w-[56%] lg:w-auto lg:shrink"
+                  >
+                    <div className="flex h-full flex-col gap-3.5 sm:gap-4">
+                      {/* Visual UI Preview Card Header */}
+                      <div className="relative overflow-hidden rounded-xl border border-[var(--color-border)] aspect-video group/img shadow-md">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="h-full w-full object-cover object-top transition-transform duration-500 group-hover/img:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+                        <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-950/75 px-3 py-1 text-xs font-semibold text-cyan-400 backdrop-blur shadow-sm">
+                          <Icon className="text-xs" />
+                          {project.category}
+                        </span>
+                        <span className="absolute top-2.5 right-2.5 hidden sm:inline-flex rounded-full border border-white/20 bg-slate-950/75 px-2.5 py-0.5 text-xs font-semibold text-purple-300 backdrop-blur">
+                          #{String(index + 1).padStart(2, "0")}
+                        </span>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-xs sm:text-sm font-semibold text-purple-500">{project.category}</p>
-                        <h3 className="mt-1 text-lg sm:text-2xl font-bold leading-tight text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
+
+                      <div className="flex items-start justify-between gap-4">
+                        <h3 className="text-lg sm:text-2xl font-bold leading-tight text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500">
                           {project.title}
                         </h3>
                       </div>
-                    </div>
-                    <span className="hidden sm:inline-flex rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold text-[var(--color-subtle)]">
-                      #{String(index + 1).padStart(2, "0")}
-                    </span>
-                  </div>
 
-                  <p className="line-clamp-3 text-sm sm:text-base leading-relaxed text-[var(--color-muted)] sm:line-clamp-none">
-                    {project.description}
-                  </p>
+                      <p className="line-clamp-3 text-sm leading-relaxed text-[var(--color-muted)] sm:line-clamp-none">
+                        {project.description}
+                      </p>
 
-                  <div className="grid gap-1.5 sm:gap-2">
-                    {project.highlights.map((highlight) => (
-                      <div key={highlight} className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-[var(--color-text)]">
-                        <FaArrowRight className="shrink-0 text-xs text-cyan-500" />
-                        <span>{highlight}</span>
+                      <div className="grid gap-1.5 sm:gap-2">
+                        {project.highlights.map((highlight) => (
+                          <div key={highlight} className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-[var(--color-text)]">
+                            <FaArrowRight className="shrink-0 text-xs text-cyan-500" />
+                            <span>{highlight}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full border border-[var(--color-border)] bg-linear-to-r from-purple-700/15 to-cyan-700/15 px-2.5 py-0.5 text-[11px] sm:px-3 sm:py-1 sm:text-sm text-[var(--color-text)]"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.map((tech) => (
+                          <span
+                            key={tech}
+                            className="rounded-full border border-[var(--color-border)] bg-linear-to-r from-purple-700/15 to-cyan-700/15 px-2.5 py-0.5 text-[11px] sm:px-3 sm:py-1 sm:text-sm text-[var(--color-text)]"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
 
-                  <div className="mt-auto flex flex-row gap-2 pt-1 sm:gap-3 sm:pt-2">
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-white shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_26px_rgba(34,211,238,0.45)]"
-                    >
-                      <FaExternalLinkAlt />
-                      Live Preview
-                    </a>
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-500"
-                    >
-                      <FaGithub />
-                      Source Code
-                    </a>
-                  </div>
-                </div>
-              </MotionDiv>
-            );
-          })}
-        </div>
+                      <div className="mt-auto flex flex-row gap-2 pt-1 sm:gap-3 sm:pt-2">
+                        <a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-white shadow-[0_0_18px_rgba(139,92,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_26px_rgba(34,211,238,0.45)]"
+                        >
+                          <FaExternalLinkAlt />
+                          Live Preview
+                        </a>
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-xs sm:px-4 sm:py-3 sm:text-sm font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-500"
+                        >
+                          <FaGithub />
+                          Source Code
+                        </a>
+                      </div>
+                    </div>
+                  </MotionDiv>
+                );
+              })}
+            </div>
+          </MotionDiv>
+        </AnimatePresence>
 
         <div className="mt-6 flex items-center justify-center gap-2 lg:hidden">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <button
               key={project.title}
               type="button"

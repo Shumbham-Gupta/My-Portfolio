@@ -5,6 +5,7 @@ import {
   FaEnvelope,
   FaFolderOpen,
   FaGithub,
+  FaGraduationCap,
   FaHome,
   FaLinkedin,
   FaMoon,
@@ -12,6 +13,7 @@ import {
   FaTimes,
   FaTools,
   FaUser,
+  FaDownload,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -25,6 +27,7 @@ const navItems = [
   { id: "about", label: "About", icon: FaUser },
   { id: "skills", label: "Skills", icon: FaTools },
   { id: "projects", label: "Projects", icon: FaFolderOpen },
+  { id: "experience", label: "Experience", icon: FaGraduationCap },
   { id: "contact", label: "Contact", icon: FaEnvelope },
 ];
 
@@ -124,14 +127,28 @@ const Navbar = ({ isDark, onToggleTheme }) => {
           duration={500}
           offset={-80}
           onClick={closeNav}
-          className="min-w-0 cursor-pointer"
+          className="group flex items-center gap-3 min-w-0 cursor-pointer"
         >
+          <MotionDiv
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-cyan-400/40 bg-linear-to-br from-purple-600/30 via-slate-900 to-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-all duration-300 group-hover:scale-105 group-hover:border-cyan-400 group-hover:shadow-[0_0_22px_rgba(34,211,238,0.55)] sm:h-10 sm:w-10"
+          >
+            <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent font-black tracking-tighter text-sm sm:text-base">
+              SG
+            </span>
+          </MotionDiv>
           <MotionH1
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="truncate text-lg font-extrabold tracking-wide text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-cyan-500 sm:text-2xl lg:text-3xl"
+            className="flex flex-col min-w-0 font-['Plus_Jakarta_Sans',sans-serif]"
           >
-            Shubham Gupta
+            <span className="truncate text-base font-extrabold tracking-tight text-[var(--color-text)] transition-colors duration-300 group-hover:text-cyan-400 sm:text-xl lg:text-2xl">
+              Shubham <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Gupta</span>
+            </span>
+            <span className="hidden text-[10px] font-bold uppercase tracking-[0.25em] text-cyan-400/80 sm:block mt-1 font-['Inter',sans-serif]">
+              Full Stack Developer
+            </span>
           </MotionH1>
         </Link>
 
@@ -217,13 +234,18 @@ const Navbar = ({ isDark, onToggleTheme }) => {
               <span className="absolute left-2 top-1/2 h-12 w-1 -translate-y-1/2 rounded-full bg-[var(--color-border)]"></span>
 
               <div className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] px-5 py-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-500">
-                    Menu
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-[var(--color-text)]">
-                    Shubham Gupta
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-cyan-400/40 bg-linear-to-br from-purple-600/30 via-slate-900 to-cyan-500/30 text-xs font-black">
+                    <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">SG</span>
+                  </div>
+                  <div>
+                    <p className="text-base font-extrabold text-[var(--color-text)] font-['Plus_Jakarta_Sans',sans-serif]">
+                      Shubham <span className="bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Gupta</span>
+                    </p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-500 mt-1">
+                      Full Stack Developer
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={closeNav}
