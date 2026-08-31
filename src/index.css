@@ -4,6 +4,7 @@
 :root {
   color-scheme: light;
   --color-page: #f8fafc;
+  --color-card: #ffffff;
   --color-text: #1e293b;
   --color-muted: #475569;
   --color-subtle: #64748b;
@@ -24,6 +25,7 @@
 .dark {
   color-scheme: dark;
   --color-page: #020617;
+  --color-card: #0b1120;
   --color-text: #e5e7eb;
   --color-muted: #d1d5db;
   --color-subtle: #9ca3af;

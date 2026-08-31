@@ -41,7 +41,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity"
+          className="fixed inset-0 bg-slate-900/60 dark:bg-slate-950/85 backdrop-blur-md transition-opacity"
         />
 
         {/* Modal Container */}
@@ -50,22 +50,22 @@ const ResumeModal = ({ isOpen, onClose }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative z-10 my-auto flex h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text)] shadow-[0_0_60px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
+          className="relative z-10 my-auto flex h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-purple-200/80 dark:border-cyan-400/30 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-2xl"
         >
           {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] bg-white/5 px-4 py-3 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 px-4 py-3 sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/20 text-red-400 border border-red-500/30">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/20 text-red-500 dark:text-red-400 border border-red-500/30">
                 <FaFilePdf className="text-xl" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-[var(--color-text)] flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   Shubham Gupta — Resume
-                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 px-2 py-0.5 text-[10px] font-semibold text-cyan-300">
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 px-2 py-0.5 text-[10px] font-semibold text-cyan-700 dark:text-cyan-300">
                     <FaCheckCircle className="text-[9px]" /> Updated
                   </span>
                 </h3>
-                <p className="text-xs text-[var(--color-muted)]">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   Full Stack MERN Developer & Data Analytics Enthusiast
                 </p>
               </div>
@@ -86,7 +86,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
                 target="_blank"
                 rel="noreferrer"
                 title="Open in new browser tab"
-                className="inline-flex items-center justify-center h-9 w-9 rounded-xl border border-[var(--color-border)] bg-white/5 text-[var(--color-muted)] transition-all hover:bg-white/15 hover:text-[var(--color-text)]"
+                className="inline-flex items-center justify-center h-9 w-9 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-white"
               >
                 <FaExternalLinkAlt className="text-xs" />
               </a>
@@ -95,7 +95,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
                 onClick={onClose}
                 type="button"
                 aria-label="Close modal"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white/5 text-[var(--color-muted)] transition-all hover:bg-white/15 hover:text-[var(--color-text)] hover:scale-105"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-white hover:scale-105"
               >
                 <FaTimes className="text-base" />
               </button>
@@ -103,7 +103,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* PDF Viewer Body */}
-          <div className="relative flex-1 w-full bg-slate-900 overflow-hidden">
+          <div className="relative flex-1 w-full bg-slate-100 dark:bg-slate-900 overflow-hidden">
             <iframe
               src={`${resumeUrl}#view=FitH&toolbar=1&navpanes=0`}
               title="Shubham Gupta Resume"

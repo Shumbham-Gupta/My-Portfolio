@@ -111,7 +111,7 @@ const Home = ({ onOpenResume }) => {
       {/* 5. Quick Category Navigation Cards Grid */}
       <section className="relative px-4 sm:px-6 mx-auto max-w-7xl">
         <div className="text-center mb-8">
-          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-cyan-400 mb-1.5">
+          <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-purple-700 dark:text-cyan-400 mb-1.5">
             Explore Portfolio
           </p>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text)]">
@@ -125,7 +125,7 @@ const Home = ({ onOpenResume }) => {
             className="group p-3 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-cyan-400 transition-all hover:scale-105 shadow-[var(--shadow-soft)] flex flex-col justify-between"
           >
             <div>
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-purple-500/20 text-purple-500 dark:text-purple-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
                 <FaCode />
               </div>
               <h3 className="font-bold text-xs sm:text-sm md:text-base text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
@@ -135,7 +135,7 @@ const Home = ({ onOpenResume }) => {
                 Engineering journey, mindset, and education.
               </p>
             </div>
-            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-cyan-400">
+            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-purple-700 dark:text-cyan-400">
               Read Bio <FaArrowRight className="text-[8px] sm:text-[9px]" />
             </span>
           </Link>
@@ -145,7 +145,7 @@ const Home = ({ onOpenResume }) => {
             className="group p-3 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-cyan-400 transition-all hover:scale-105 shadow-[var(--shadow-soft)] flex flex-col justify-between"
           >
             <div>
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
                 <FaFolderOpen />
               </div>
               <h3 className="font-bold text-xs sm:text-sm md:text-base text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
@@ -155,7 +155,7 @@ const Home = ({ onOpenResume }) => {
                 React 19, Node.js, Python, MongoDB, Power BI.
               </p>
             </div>
-            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-cyan-400">
+            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-purple-700 dark:text-cyan-400">
               Explore Stack <FaArrowRight className="text-[8px] sm:text-[9px]" />
             </span>
           </Link>
@@ -165,7 +165,7 @@ const Home = ({ onOpenResume }) => {
             className="group p-3 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-cyan-400 transition-all hover:scale-105 shadow-[var(--shadow-soft)] flex flex-col justify-between"
           >
             <div>
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
                 <FaGraduationCap />
               </div>
               <h3 className="font-bold text-xs sm:text-sm md:text-base text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
@@ -175,7 +175,7 @@ const Home = ({ onOpenResume }) => {
                 LaunchEd Global & JiPanditJi journey.
               </p>
             </div>
-            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-cyan-400">
+            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-purple-700 dark:text-cyan-400">
               View Timeline <FaArrowRight className="text-[8px] sm:text-[9px]" />
             </span>
           </Link>
@@ -185,7 +185,7 @@ const Home = ({ onOpenResume }) => {
             className="group p-3 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] hover:border-cyan-400 transition-all hover:scale-105 shadow-[var(--shadow-soft)] flex flex-col justify-between"
           >
             <div>
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2.5 sm:mb-4 text-sm sm:text-lg">
                 <FaCertificate />
               </div>
               <h3 className="font-bold text-xs sm:text-sm md:text-base text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
@@ -195,7 +195,7 @@ const Home = ({ onOpenResume }) => {
                 Verified Power BI, Python, React credentials.
               </p>
             </div>
-            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-cyan-400">
+            <span className="mt-2.5 sm:mt-4 inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-purple-700 dark:text-cyan-400">
               View Credentials <FaArrowRight className="text-[8px] sm:text-[9px]" />
             </span>
           </Link>
@@ -204,11 +204,11 @@ const Home = ({ onOpenResume }) => {
 
       {/* 6. Direct Contact Banner */}
       <section className="relative px-4 sm:px-6 mx-auto max-w-7xl">
-        <div className="rounded-2xl sm:rounded-3xl border border-cyan-400/30 bg-linear-to-r from-purple-950/40 via-slate-900/90 to-cyan-950/40 p-6 sm:p-10 text-center backdrop-blur-xl shadow-[0_0_50px_rgba(34,211,238,0.15)]">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white">
+        <div className="rounded-2xl sm:rounded-3xl border border-purple-200/80 dark:border-cyan-400/30 bg-linear-to-r from-purple-100/90 via-white to-cyan-100/90 dark:from-purple-950/40 dark:via-slate-900/90 dark:to-cyan-950/40 p-6 sm:p-10 text-center backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] dark:shadow-[0_0_50px_rgba(34,211,238,0.15)]">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">
             Looking for a High-Impact Developer?
           </h2>
-          <p className="mt-3 text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
             I am currently open to full-time Full-Stack Developer, Frontend/Backend, and Data Analytics opportunities. Let&apos;s build something great together.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -222,7 +222,7 @@ const Home = ({ onOpenResume }) => {
             <button
               onClick={onOpenResume}
               type="button"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-xs sm:text-sm font-bold text-white transition-all hover:bg-white/20 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-full border border-purple-300 dark:border-white/20 bg-white dark:bg-white/10 px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-800 dark:text-white transition-all hover:bg-purple-50 dark:hover:bg-white/20 hover:scale-105 shadow-xs"
             >
               <span>Preview Resume</span>
             </button>

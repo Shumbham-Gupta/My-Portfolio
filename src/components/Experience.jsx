@@ -242,8 +242,8 @@ const Experience = () => {
                   {careerRoadmap.map((item, idx) => (
                     <div key={item.company} className="relative">
                       {/* Node Bullet */}
-                      <div className={`absolute -left-[30px] sm:-left-[47px] top-6 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border-2 bg-slate-950 ${item.isCurrent ? "border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)]" : "border-amber-400"}`}>
-                        <span className={`h-2.5 w-2.5 rounded-full ${item.isCurrent ? "bg-cyan-400 animate-pulse" : "bg-amber-400"}`}></span>
+                      <div className={`absolute -left-[30px] sm:-left-[47px] top-6 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border-2 bg-white dark:bg-slate-950 ${item.isCurrent ? "border-cyan-500 dark:border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)]" : "border-amber-500 dark:border-amber-400"}`}>
+                        <span className={`h-2.5 w-2.5 rounded-full ${item.isCurrent ? "bg-cyan-500 dark:bg-cyan-400 animate-pulse" : "bg-amber-500 dark:bg-amber-400"}`}></span>
                       </div>
 
                         <MotionDiv
@@ -253,7 +253,7 @@ const Experience = () => {
                           transition={{ delay: idx * 0.1, duration: 0.5 }}
                           className={`themed-card rounded-3xl border p-6 transition-all duration-300 ${
                             item.isCurrent
-                              ? "border-cyan-400/60 shadow-[0_0_30px_rgba(34,211,238,0.22)] ring-1 ring-cyan-400/30"
+                              ? "border-cyan-500/60 dark:border-cyan-400/60 shadow-[0_0_30px_rgba(34,211,238,0.22)] ring-1 ring-cyan-400/30"
                               : "shadow-[var(--shadow-soft)] hover:shadow-[0_0_24px_rgba(139,92,246,0.25)]"
                           }`}
                         >
@@ -265,13 +265,13 @@ const Experience = () => {
                                   {item.stage} • {item.stageTag}
                                 </span>
                                 {item.isCurrent && (
-                                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-400/40 px-2.5 py-0.5 text-[11px] font-bold text-emerald-400 animate-pulse">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 dark:border-emerald-400/40 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 animate-pulse">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
                                     Current Role
                                   </span>
                                 )}
                               </div>
-                              <h4 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-cyan-400 to-white">
+                              <h4 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-700 via-indigo-600 to-cyan-600 dark:from-purple-400 dark:via-cyan-400 dark:to-white">
                                 {item.role}
                               </h4>
                               <div className="flex items-center gap-2 mt-1">
@@ -279,7 +279,7 @@ const Experience = () => {
                                   href={item.url}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="inline-flex items-center gap-1.5 text-sm font-bold text-purple-400 hover:text-cyan-400 transition-colors"
+                                  className="inline-flex items-center gap-1.5 text-sm font-bold text-purple-700 dark:text-purple-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
                                 >
                                   {item.company}
                                   <FaExternalLinkAlt className="text-xs" />
@@ -289,7 +289,7 @@ const Experience = () => {
                             </div>
 
                             <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-white/10 px-3 py-1 text-xs font-semibold text-[var(--color-text)]">
-                              <FaCalendarAlt className="text-xs text-cyan-400" />
+                              <FaCalendarAlt className="text-xs text-cyan-600 dark:text-cyan-400" />
                               {item.period}
                             </span>
                           </div>
