@@ -67,7 +67,7 @@ const Hero = ({ onOpenResume }) => {
   return (
     <section
       id="home"
-      className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden section-surface px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12 lg:pt-16 lg:px-8"
+      className="relative flex items-center overflow-hidden section-surface px-4 pt-8 pb-8 sm:px-6 sm:pt-10 sm:pb-12 lg:min-h-[calc(100vh-4.5rem)] lg:pt-0 lg:pb-0 lg:px-8"
     >
       <MotionDiv
         animate={{ x: [0, 40, 0], y: [0, 24, 0], scale: [1, 1.12, 1] }}
@@ -174,7 +174,7 @@ const Hero = ({ onOpenResume }) => {
           initial={{ opacity: 0, x: 36, scale: 0.94 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.9, ease: easeOutSmooth }}
-          className="relative mx-auto w-full max-w-[200px] sm:max-w-[240px] lg:max-w-[280px]"
+          className="relative mx-auto hidden w-full lg:block max-w-[200px] sm:max-w-[240px] lg:max-w-[280px]"
         >
           <MotionDiv
             animate={{ y: [0, -10, 0] }}

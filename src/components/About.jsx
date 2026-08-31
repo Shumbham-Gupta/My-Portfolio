@@ -49,7 +49,7 @@ const About = () => (
     <div className="absolute bottom-0 right-0 h-80 w-80 glow-cyan rounded-full blur-3xl"></div>
 
     <div className="relative z-10 mx-auto max-w-7xl">
-      <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-500">
             About Me

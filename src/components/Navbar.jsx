@@ -180,16 +180,11 @@ const Navbar = ({ isDark, onToggleTheme, onOpenResume, onOpenCommandPalette }) =
             <button
               type="button"
               onClick={onOpenCommandPalette}
-              title="Open Command Search (Ctrl+K)"
-              className="inline-flex items-center justify-between gap-2.5 rounded-full border border-[var(--color-border)] bg-white/5 pl-3 pr-2 py-1.5 text-xs text-[var(--color-muted)] hover:border-cyan-400 hover:text-cyan-400 transition-all hover:scale-105 min-w-[130px] xl:min-w-[190px]"
+              title="Search Portfolio"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/5 px-3.5 py-1.5 text-xs text-[var(--color-muted)] hover:border-cyan-400 hover:text-cyan-400 transition-all hover:scale-105"
             >
-              <div className="flex items-center gap-2">
-                <FaSearch className="text-[11px] text-cyan-400" />
-                <span className="text-xs text-[var(--color-subtle)] font-medium">Search...</span>
-              </div>
-              <kbd className="rounded border border-[var(--color-border)] bg-white/10 px-1.5 py-0.5 text-[10px] font-mono text-[var(--color-muted)]">
-                Ctrl K
-              </kbd>
+              <FaSearch className="text-[11px] text-cyan-400" />
+              <span className="text-xs text-[var(--color-subtle)] font-medium">Search...</span>
             </button>
 
             <button
@@ -215,15 +210,31 @@ const Navbar = ({ isDark, onToggleTheme, onOpenResume, onOpenCommandPalette }) =
             <ThemeToggle isDark={isDark} onToggleTheme={onToggleTheme} />
           </div>
 
-          <button
-            onClick={toggleNav}
-            type="button"
-            aria-label={navOpen ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={navOpen}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-toggle)] text-lg text-[var(--color-text)] shadow-[var(--shadow-soft)] transition-all hover:text-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 sm:h-11 sm:w-11 sm:text-xl lg:hidden"
-          >
-            {navOpen ? <FaTimes /> : <FaBars />}
-          </button>
+          {/* Mobile Right Controls: GitHub, LinkedIn & Hamburger */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
+            {socialLinks.map(({ href, label, icon: Icon }) => (
+              <a
+                key={`mobile-${label}`}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-card)] text-purple-500 shadow-xs transition-all hover:border-cyan-400 hover:text-cyan-500 active:scale-95 sm:h-10 sm:w-10"
+                aria-label={label}
+              >
+                {React.createElement(Icon, { className: "text-sm sm:text-base" })}
+              </a>
+            ))}
+
+            <button
+              onClick={toggleNav}
+              type="button"
+              aria-label={navOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={navOpen}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-toggle)] text-base text-[var(--color-text)] shadow-[var(--shadow-soft)] transition-all hover:text-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 active:scale-95 sm:h-10 sm:w-10 sm:text-lg"
+            >
+              {navOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
         </nav>
       </MotionHeader>
 
