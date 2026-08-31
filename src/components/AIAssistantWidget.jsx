@@ -332,19 +332,46 @@ const renderFormattedText = (text, isDarkMode) => {
   });
 };
 
-// Modern Neural AI Sparkle Icon
-const SparkleAIIcon = ({ className = "w-5 h-5" }) => (
+// Modern Futuristic AI Quantum Nexus Logo
+const AINexusLogo = ({ className = "w-5 h-5" }) => (
   <svg
     viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
-    <path d="M12 1L14.4 8.6L22 11L14.4 13.4L12 21L9.6 13.4L2 11L9.6 8.6L12 1Z" />
-    <path
-      d="M19 14L20.2 17.8L24 19L20.2 20.2L19 24L17.8 20.2L14 19L17.8 17.8L19 14Z"
-      opacity="0.85"
+    {/* Outer Orbiting Quantum Ring */}
+    <circle
+      cx="12"
+      cy="12"
+      r="9.5"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeDasharray="3 3"
+      className="opacity-40"
     />
+    {/* Primary Neural Gradient Waves */}
+    <path
+      d="M12 2.5C6.75329 2.5 2.5 6.75329 2.5 12C2.5 17.2467 6.75329 21.5 12 21.5"
+      stroke="#22d3ee"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M21.5 12C21.5 6.75329 17.2467 2.5 12 2.5"
+      stroke="#c084fc"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M21.5 12C21.5 17.2467 17.2467 21.5 12 21.5"
+      stroke="#f472b6"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    {/* Core Glowing Nexus Sphere */}
+    <circle cx="12" cy="12" r="3.5" fill="#ffffff" />
+    <circle cx="12" cy="12" r="2" fill="#818cf8" />
   </svg>
 );
 
@@ -512,7 +539,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
   return (
     <div ref={widgetRef}>
       {/* Floating Trigger Button - Ultra Modern Neural FAB */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+      <div className="fixed bottom-6 right-4 sm:bottom-10 sm:right-7 z-50">
         <motion.button
           onClick={() => setIsOpen((prev) => !prev)}
           type="button"
@@ -532,9 +559,9 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 : "bg-white/95 text-slate-900 shadow-[0_8px_30px_rgba(124,58,237,0.25)] border border-purple-200/80 group-hover:border-purple-400"
             }`}
           >
-            {/* Holographic Neural AI Sparkle Orb */}
+            {/* Quantum AI Nexus Orb */}
             <span className="relative flex h-11 w-11 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(34,211,238,0.55)] transition-transform duration-300 group-hover:scale-105">
-              <SparkleAIIcon className="h-5 w-5 sm:h-5 sm:w-5 animate-pulse" />
+              <AINexusLogo className="h-5 w-5 sm:h-5 sm:w-5" />
               <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-slate-950"></span>
@@ -549,7 +576,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
                     : "text-transparent bg-clip-text bg-linear-to-r from-purple-700 to-cyan-700"
                 }`}
               >
-                Ask Shubham&apos;s AI
+                Ask Me
               </p>
               <p className={`text-[10px] font-semibold flex items-center gap-1.5 ${isDark ? "text-cyan-400/90" : "text-purple-600"}`}>
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -563,191 +590,204 @@ const AIAssistantWidget = ({ isDark = false }) => {
       {/* Interactive Modal / Chat Drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.94 }}
-            transition={{ duration: 0.3 }}
-            className={`fixed bottom-20 left-3 right-3 z-50 mx-auto max-h-[82vh] w-auto max-w-[420px] overflow-hidden rounded-3xl border backdrop-blur-2xl sm:bottom-24 sm:right-6 sm:left-auto sm:w-[420px] sm:max-h-[85vh] ${
-              isDark
-                ? "border-cyan-400/40 bg-slate-950/95 text-slate-100 shadow-[0_10px_50px_rgba(0,0,0,0.85),0_0_40px_rgba(34,211,238,0.3)]"
-                : "border-purple-200/80 bg-white text-slate-800 shadow-[0_20px_60px_rgba(30,41,59,0.22)] ring-1 ring-purple-100"
-            }`}
-          >
-            {/* Header */}
-            <div
-              className={`flex items-center justify-between border-b p-4 ${
+          <>
+            {/* Mobile Backdrop Tap to Close */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs sm:hidden"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, y: 25, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 25, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className={`fixed bottom-4 left-2.5 right-2.5 z-50 mx-auto flex flex-col h-[74vh] max-h-[580px] w-auto max-w-[420px] overflow-hidden rounded-2xl sm:rounded-3xl border backdrop-blur-2xl sm:bottom-28 sm:right-7 sm:left-auto sm:w-[420px] sm:h-auto sm:max-h-[85vh] ${
                 isDark
-                  ? "border-slate-800 bg-linear-to-r from-purple-950/50 via-slate-950 to-slate-950 text-white"
-                  : "border-purple-100 bg-linear-to-r from-purple-50 via-cyan-50/60 to-white text-slate-900"
+                  ? "border-cyan-400/40 bg-slate-950/95 text-slate-100 shadow-[0_10px_50px_rgba(0,0,0,0.85),0_0_40px_rgba(34,211,238,0.3)]"
+                  : "border-purple-200/80 bg-white text-slate-800 shadow-[0_20px_60px_rgba(30,41,59,0.22)] ring-1 ring-purple-100"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(34,211,238,0.4)]">
-                  <SparkleAIIcon className="h-5 w-5" />
-                  <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold leading-tight flex items-center gap-1.5">
-                    Shubham&apos;s AI Assistant
-                    <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-400 border border-emerald-400/30">
-                      ONLINE
+              {/* Header */}
+              <div
+                className={`flex items-center justify-between border-b px-3.5 py-2.5 sm:p-4 shrink-0 ${
+                  isDark
+                    ? "border-slate-800 bg-linear-to-r from-purple-950/50 via-slate-950 to-slate-950 text-white"
+                    : "border-purple-100 bg-linear-to-r from-purple-50 via-cyan-50/60 to-white text-slate-900"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="relative flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-linear-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                    <AINexusLogo className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 sm:h-3 sm:w-3">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-emerald-500"></span>
                     </span>
-                  </h4>
-                  <p className="text-[11px] text-cyan-400 font-medium">Instant Q&amp;A &bull; Portfolio Intelligence</p>
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold leading-tight flex items-center gap-1.5">
+                      Ask Me
+                      <span className="rounded-md bg-emerald-500/20 px-1 py-0.2 sm:px-1.5 sm:py-0.5 text-[8px] sm:text-[9px] font-extrabold text-emerald-400 border border-emerald-400/30">
+                        ONLINE
+                      </span>
+                    </h4>
+                    <p className="text-[10px] sm:text-[11px] text-cyan-400 font-medium leading-none mt-0.5">
+                      Instant Q&amp;A &bull; Portfolio Intelligence
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={clearChat}
-                  type="button"
-                  aria-label="Clear chat history"
-                  title="Clear chat"
-                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
-                    isDark
-                      ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-                      : "text-slate-500 hover:bg-purple-100 hover:text-slate-800"
-                  }`}
-                >
-                  <FaTrashAlt className="text-xs" />
-                </button>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  type="button"
-                  aria-label="Close assistant"
-                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
-                    isDark
-                      ? "text-slate-400 hover:bg-slate-800 hover:text-white"
-                      : "text-slate-500 hover:bg-purple-100 hover:text-slate-900"
-                  }`}
-                >
-                  <FaTimes className="text-sm" />
-                </button>
-              </div>
-            </div>
-
-            {/* Message Thread */}
-            <div
-              className={`h-[360px] overflow-y-auto p-4 space-y-3.5 text-xs ${
-                isDark ? "bg-slate-950/60" : "bg-slate-50/70"
-              }`}
-            >
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
-                >
-                  <div
-                    className={`max-w-[88%] rounded-2xl p-3.5 shadow-sm leading-relaxed ${
-                      msg.sender === "user"
-                        ? "bg-linear-to-r from-purple-600 to-cyan-600 text-white rounded-br-none shadow-[0_4px_15px_rgba(139,92,246,0.3)]"
-                        : isDark
-                        ? "bg-slate-900/90 text-slate-200 border border-slate-800/90 rounded-tl-none"
-                        : "bg-white text-slate-800 border border-purple-100/90 rounded-tl-none shadow-sm"
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={clearChat}
+                    type="button"
+                    aria-label="Clear chat history"
+                    title="Clear chat"
+                    className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full transition-colors ${
+                      isDark
+                        ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                        : "text-slate-500 hover:bg-purple-100 hover:text-slate-800"
                     }`}
                   >
-                    {msg.sender === "ai" && !msg.text && streamingMessageId === msg.id ? (
-                      <div className="flex items-center gap-1.5 py-1">
-                        <span className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce"></span>
-                        <span className="h-2 w-2 rounded-full bg-purple-400 animate-bounce delay-150"></span>
-                        <span className="h-2 w-2 rounded-full bg-cyan-300 animate-bounce delay-300"></span>
+                    <FaTrashAlt className="text-[10px] sm:text-xs" />
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    type="button"
+                    aria-label="Close assistant"
+                    className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full transition-colors ${
+                      isDark
+                        ? "text-slate-400 hover:bg-slate-800 hover:text-white"
+                        : "text-slate-500 hover:bg-purple-100 hover:text-slate-900"
+                    }`}
+                  >
+                    <FaTimes className="text-xs sm:text-sm" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Message Thread (Flexible Auto-Sizing on Mobile) */}
+              <div
+                className={`flex-1 min-h-0 sm:h-[340px] overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3.5 text-xs ${
+                  isDark ? "bg-slate-950/60" : "bg-slate-50/70"
+                }`}
+              >
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
+                  >
+                    <div
+                      className={`max-w-[90%] sm:max-w-[88%] rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 shadow-xs leading-relaxed text-[11px] sm:text-xs ${
+                        msg.sender === "user"
+                          ? "bg-linear-to-r from-purple-600 to-cyan-600 text-white rounded-br-none shadow-[0_4px_15px_rgba(139,92,246,0.3)]"
+                          : isDark
+                          ? "bg-slate-900/90 text-slate-200 border border-slate-800/90 rounded-tl-none"
+                          : "bg-white text-slate-800 border border-purple-100/90 rounded-tl-none shadow-xs"
+                      }`}
+                    >
+                      {msg.sender === "ai" && !msg.text && streamingMessageId === msg.id ? (
+                        <div className="flex items-center gap-1.5 py-1">
+                          <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-cyan-400 animate-bounce"></span>
+                          <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-purple-400 animate-bounce delay-150"></span>
+                          <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-cyan-300 animate-bounce delay-300"></span>
+                        </div>
+                      ) : (
+                        <>
+                          {renderFormattedText(msg.text, isDark)}
+                          {streamingMessageId === msg.id && (
+                            <span className="inline-block w-[3px] h-3 sm:h-3.5 bg-cyan-400 animate-pulse ml-1 align-middle" />
+                          )}
+                        </>
+                      )}
+                    </div>
+
+                    {/* Interactive Action Pills */}
+                    {msg.actions && msg.actions.length > 0 && streamingMessageId !== msg.id && (
+                      <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-1 sm:gap-1.5 max-w-[95%]">
+                        {msg.actions.map((act, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleActionClick(act)}
+                            type="button"
+                            className={`inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-semibold transition-all duration-200 hover:scale-105 ${
+                              isDark
+                                ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
+                                : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400"
+                            }`}
+                          >
+                            {act.type === "link" && <FaExternalLinkAlt className="text-[8px] sm:text-[9px]" />}
+                            {act.type === "download" && <FaDownload className="text-[8px] sm:text-[9px]" />}
+                            {act.type === "scroll" && <FaArrowRight className="text-[8px] sm:text-[9px]" />}
+                            <span>{act.label}</span>
+                          </button>
+                        ))}
                       </div>
-                    ) : (
-                      <>
-                        {renderFormattedText(msg.text, isDark)}
-                        {streamingMessageId === msg.id && (
-                          <span className="inline-block w-[3px] h-3.5 bg-cyan-400 animate-pulse ml-1 align-middle" />
-                        )}
-                      </>
                     )}
                   </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
 
-                  {/* Interactive Action Pills */}
-                  {msg.actions && msg.actions.length > 0 && streamingMessageId !== msg.id && (
-                    <div className="mt-2 flex flex-wrap gap-1.5 max-w-[90%]">
-                      {msg.actions.map((act, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => handleActionClick(act)}
-                          type="button"
-                          className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all duration-200 hover:scale-105 ${
-                            isDark
-                              ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
-                              : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400"
-                          }`}
-                        >
-                          {act.type === "link" && <FaExternalLinkAlt className="text-[9px]" />}
-                          {act.type === "download" && <FaDownload className="text-[9px]" />}
-                          {act.type === "scroll" && <FaArrowRight className="text-[9px]" />}
-                          <span>{act.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Quick Suggestion Chips */}
-            <div
-              className={`border-t px-3 py-2 overflow-x-auto no-scrollbar flex gap-1.5 ${
-                isDark ? "border-slate-800 bg-slate-900/60" : "border-purple-100 bg-purple-50/40"
-              }`}
-            >
-              {sampleQuestions.slice(0, 4).map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(q.query)}
-                  disabled={isTyping}
-                  type="button"
-                  className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors ${
-                    isDark
-                      ? "border-slate-800 bg-slate-900 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
-                      : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 disabled:opacity-50"
-                  }`}
-                >
-                  {q.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Input Form */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendMessage();
-              }}
-              className={`flex items-center gap-2 border-t p-3 ${
-                isDark ? "border-slate-800 bg-slate-950" : "border-purple-100 bg-white"
-              }`}
-            >
-              <input
-                type="text"
-                value={inputQuery}
-                onChange={(e) => setInputQuery(e.target.value)}
-                placeholder={isTyping ? "AI is typing response..." : "Ask Shubham's AI..."}
-                disabled={isTyping}
-                className={`flex-1 rounded-xl border px-3.5 py-2.5 text-xs font-medium transition-all focus:outline-none focus:ring-2 disabled:opacity-50 ${
-                  isDark
-                    ? "border-slate-800 bg-slate-900 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-cyan-400/30"
-                    : "border-purple-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-purple-500 focus:ring-purple-500/30"
+              {/* Quick Suggestion Chips */}
+              <div
+                className={`border-t px-2.5 py-1.5 sm:px-3 sm:py-2 overflow-x-auto no-scrollbar flex gap-1 sm:gap-1.5 shrink-0 ${
+                  isDark ? "border-slate-800 bg-slate-900/60" : "border-purple-100 bg-purple-50/40"
                 }`}
-              />
-              <button
-                type="submit"
-                disabled={!inputQuery.trim() || isTyping}
-                aria-label="Send query"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 text-white shadow-md transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
               >
-                <FaPaperPlane className="text-xs" />
-              </button>
-            </form>
-          </motion.div>
+                {sampleQuestions.slice(0, 4).map((q, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSendMessage(q.query)}
+                    disabled={isTyping}
+                    type="button"
+                    className={`shrink-0 rounded-full border px-2 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-medium transition-colors ${
+                      isDark
+                        ? "border-slate-800 bg-slate-900 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
+                        : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 disabled:opacity-50"
+                    }`}
+                  >
+                    {q.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Input Form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendMessage();
+                }}
+                className={`flex items-center gap-1.5 sm:gap-2 border-t p-2.5 sm:p-3 shrink-0 ${
+                  isDark ? "border-slate-800 bg-slate-950" : "border-purple-100 bg-white"
+                }`}
+              >
+                <input
+                  type="text"
+                  value={inputQuery}
+                  onChange={(e) => setInputQuery(e.target.value)}
+                  placeholder={isTyping ? "Thinking..." : "Ask Shubham's AI..."}
+                  disabled={isTyping}
+                  className={`flex-1 rounded-xl border px-3 py-2 text-xs font-medium transition-all focus:outline-none focus:ring-2 disabled:opacity-50 ${
+                    isDark
+                      ? "border-slate-800 bg-slate-900 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-cyan-400/30"
+                      : "border-purple-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-purple-500 focus:ring-purple-500/30"
+                  }`}
+                />
+                <button
+                  type="submit"
+                  disabled={!inputQuery.trim() || isTyping}
+                  aria-label="Send query"
+                  className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 text-white shadow-md transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+                >
+                  <FaPaperPlane className="text-[10px] sm:text-xs" />
+                </button>
+              </form>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

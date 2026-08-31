@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import ProjectModal from "./ProjectModal";
 import {
   FaArrowRight,
@@ -9,13 +9,13 @@ import {
   FaExternalLinkAlt,
   FaGithub,
   FaBookOpen,
-  FaLayerGroup,
   FaUsers,
   FaRobot,
   FaShieldAlt,
   FaShoppingCart,
   FaTasks,
   FaChartLine,
+  FaLayerGroup,
 } from "react-icons/fa";
 
 import imgTaskInfus from "../assets/project_taskinfus.png";
@@ -241,78 +241,157 @@ const allFeaturedProjects = [
   },
 ];
 
+const TOTAL_PROJECTS = allFeaturedProjects.length; // 9
+// 5x continuous infinite stream (45 cards) centered at index 18
+const infiniteProjectList = [
+  ...allFeaturedProjects.map((p) => ({ ...p, uniqueKey: `set0-${p.id}` })),
+  ...allFeaturedProjects.map((p) => ({ ...p, uniqueKey: `set1-${p.id}` })),
+  ...allFeaturedProjects.map((p) => ({ ...p, uniqueKey: `set2-${p.id}` })),
+  ...allFeaturedProjects.map((p) => ({ ...p, uniqueKey: `set3-${p.id}` })),
+  ...allFeaturedProjects.map((p) => ({ ...p, uniqueKey: `set4-${p.id}` })),
+];
+
+const START_INDEX = TOTAL_PROJECTS * 2; // Index 18 (Center set)
+
 const FeaturedProjectsCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(START_INDEX);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
-  const scrollContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [cardStep, setCardStep] = useState(400);
+  const containerRef = useRef(null);
+  const controls = useAnimationControls();
+  const lastWheelTimeRef = useRef(0);
+  const isTransitioningRef = useRef(false);
 
-  // Buttery-smooth cubic eased scrolling animation (800ms transition)
-  const smoothScrollTo = (element, target, duration = 800) => {
-    if (!element) return;
-    const start = element.scrollLeft;
-    const change = target - start;
-    if (Math.abs(change) < 2) return;
-    const startTime = performance.now();
+  // Measure card width + gap dynamically
+  const updateCardDimensions = useCallback(() => {
+    if (!containerRef.current) return;
+    const width = containerRef.current.offsetWidth;
+    const cardW = width < 640 ? 295 : width < 1024 ? 350 : 380;
+    const gapW = width < 640 ? 16 : 20;
+    setCardStep(cardW + gapW);
+  }, []);
 
-    const easeInOutCubic = (t) =>
-      t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  useEffect(() => {
+    updateCardDimensions();
+    window.addEventListener("resize", updateCardDimensions);
+    return () => window.removeEventListener("resize", updateCardDimensions);
+  }, [updateCardDimensions]);
 
-    const animateScroll = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeInOutCubic(progress);
+  // Cinematic smooth physical gliding transition
+  const glideToIndex = useCallback(
+    async (targetIdx, immediate = false) => {
+      const targetX = -targetIdx * cardStep;
 
-      element.scrollLeft = start + change * ease;
+      if (immediate) {
+        await controls.set({ x: targetX });
+        setCurrentIndex(targetIdx);
+        return;
+      }
 
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
+      isTransitioningRef.current = true;
+      await controls.start({
+        x: targetX,
+        transition: {
+          duration: 1.0, // Smooth physical travel time
+          ease: [0.16, 1, 0.3, 1], // Apple momentum smooth deceleration curve
+        },
+      });
+      isTransitioningRef.current = false;
+
+      // Infinite Boundary Seamless Normalization
+      // If we move too far right (>= index 36) or too far left (< index 9)
+      if (targetIdx >= TOTAL_PROJECTS * 4 || targetIdx < TOTAL_PROJECTS) {
+        const normalizedIndex = (targetIdx % TOTAL_PROJECTS) + START_INDEX;
+        await controls.set({ x: -normalizedIndex * cardStep });
+        setCurrentIndex(normalizedIndex);
+      } else {
+        setCurrentIndex(targetIdx);
+      }
+    },
+    [cardStep, controls]
+  );
+
+  // Set initial position on mount
+  useEffect(() => {
+    if (cardStep > 0) {
+      glideToIndex(START_INDEX, true);
+    }
+  }, [cardStep, glideToIndex]);
+
+  const handlePrev = useCallback(() => {
+    if (isTransitioningRef.current) return;
+    glideToIndex(currentIndex - 1);
+  }, [currentIndex, glideToIndex]);
+
+  const handleNext = useCallback(() => {
+    if (isTransitioningRef.current) return;
+    glideToIndex(currentIndex + 1);
+  }, [currentIndex, glideToIndex]);
+
+  // Non-passive wheel event listener to strictly prevent browser tab switching / history back navigation
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onWheelHandler = (e) => {
+      const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey;
+      if (isHorizontal) {
+        // Stop browser swipe-to-navigate-history or tab-switching
+        e.preventDefault();
+        e.stopPropagation();
+
+        const now = performance.now();
+        if (now - lastWheelTimeRef.current < 400) return; // Debounce multi-wheel events
+
+        const delta = e.shiftKey ? e.deltaY : e.deltaX;
+        if (delta > 15) {
+          lastWheelTimeRef.current = now;
+          handleNext();
+        } else if (delta < -15) {
+          lastWheelTimeRef.current = now;
+          handlePrev();
+        }
       }
     };
 
-    requestAnimationFrame(animateScroll);
+    container.addEventListener("wheel", onWheelHandler, { passive: false });
+    return () => container.removeEventListener("wheel", onWheelHandler);
+  }, [handleNext, handlePrev]);
+
+  // Mouse Drag / Touch Swipe gesture handling
+  const handleDragStart = () => {
+    setIsDragging(true);
+    setIsPaused(true);
   };
 
-  const scrollToIndex = (index) => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const cardWidth = container.offsetWidth < 640 ? 295 : container.offsetWidth < 1024 ? 350 : 380;
-    const gap = container.offsetWidth < 640 ? 16 : 20;
-    const scrollAmount = index * (cardWidth + gap);
+  const handleDragEnd = (event, info) => {
+    setTimeout(() => setIsDragging(false), 50);
+    setIsPaused(false);
 
-    smoothScrollTo(container, scrollAmount, 750);
-    setCurrentIndex(index);
-  };
+    const threshold = 45; // px threshold
+    const velocityThreshold = 180;
 
-  const handlePrev = () => {
-    const newIdx = currentIndex === 0 ? allFeaturedProjects.length - 1 : currentIndex - 1;
-    scrollToIndex(newIdx);
-  };
-
-  const handleNext = () => {
-    const newIdx = currentIndex === allFeaturedProjects.length - 1 ? 0 : currentIndex + 1;
-    scrollToIndex(newIdx);
-  };
-
-  const handleScroll = () => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const cardWidth = container.offsetWidth < 640 ? 295 : container.offsetWidth < 1024 ? 350 : 380;
-    const gap = container.offsetWidth < 640 ? 16 : 20;
-    const newIdx = Math.round(container.scrollLeft / (cardWidth + gap));
-    if (newIdx >= 0 && newIdx < allFeaturedProjects.length && newIdx !== currentIndex) {
-      setCurrentIndex(newIdx);
+    if (info.offset.x < -threshold || info.velocity.x < -velocityThreshold) {
+      handleNext();
+    } else if (info.offset.x > threshold || info.velocity.x > velocityThreshold) {
+      handlePrev();
+    } else {
+      glideToIndex(currentIndex);
     }
   };
 
-  // Relaxed, comfortable autoplay loop every 6.5s (pauses on hover or touch)
+  // Smooth continuous glide loop every 4.8s
   useEffect(() => {
-    if (isPaused || selectedProject) return;
+    if (isPaused || isDragging || selectedProject) return;
     const timer = setInterval(() => {
       handleNext();
-    }, 6500);
+    }, 4800);
     return () => clearInterval(timer);
-  }, [currentIndex, isPaused, selectedProject]);
+  }, [handleNext, isPaused, isDragging, selectedProject]);
+
+  const activeDotIndex = currentIndex % TOTAL_PROJECTS;
 
   return (
     <section className="relative px-4 sm:px-6 mx-auto max-w-7xl">
@@ -361,115 +440,124 @@ const FeaturedProjectsCarousel = () => {
         </div>
       </div>
 
-      {/* Horizontal Carousel Track */}
+      {/* GPU Hardware-Accelerated Smooth Motion Track with Wheel & Drag Gestures */}
       <div
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
+        ref={containerRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
-        className="flex gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0"
+        className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_3%,black_97%,transparent)] pb-4 pt-1 cursor-grab active:cursor-grabbing touch-pan-y overscroll-x-contain select-none"
       >
-        {allFeaturedProjects.map((project, idx) => (
-          <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.05, duration: 0.4 }}
-            className="group relative flex w-[295px] sm:w-[350px] md:w-[380px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-[var(--shadow-soft)] transition-all duration-300 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.25)] hover:-translate-y-1"
-          >
-            {/* Project Image Banner with Index Pill */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
-              <img
-                src={project.image}
-                alt={project.title}
-                loading="lazy"
-                className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
+        <motion.div
+          drag="x"
+          dragElastic={0.12}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          animate={controls}
+          className="flex gap-4 sm:gap-5 w-max"
+          style={{ willChange: "transform" }}
+        >
+          {infiniteProjectList.map((project) => (
+            <div
+              key={project.uniqueKey}
+              className="group relative flex w-[295px] sm:w-[350px] md:w-[380px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-[var(--shadow-soft)] transition-all duration-300 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.25)] hover:-translate-y-1 select-none"
+            >
+              {/* Project Image Banner with Index Pill */}
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900 pointer-events-none">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  loading="lazy"
+                  draggable={false}
+                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
 
-              {/* Number Index Badge */}
-              <div className="absolute top-3 left-3 rounded-lg bg-black/60 px-2 py-0.5 text-[10px] font-mono font-bold text-cyan-400 backdrop-blur-md border border-cyan-400/30 shadow-xs">
-                #{project.index}
-              </div>
-
-              {/* Category Badge */}
-              <div className="absolute top-3 right-3 rounded-lg bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-slate-200 backdrop-blur-md border border-white/20">
-                {project.category}
-              </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
-              <div>
-                {/* Tech Badges */}
-                <div className="flex flex-wrap gap-1 mb-2.5">
-                  {project.tech.slice(0, 4).map((t) => (
-                    <span
-                      key={t}
-                      className="rounded border border-[var(--color-border)] bg-white/5 px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold text-cyan-300"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                  {project.tech.length > 4 && (
-                    <span className="rounded border border-[var(--color-border)] bg-white/5 px-1.5 py-0.5 text-[9px] font-medium text-[var(--color-subtle)]">
-                      +{project.tech.length - 4}
-                    </span>
-                  )}
+                {/* Number Index Badge */}
+                <div className="absolute top-3 left-3 rounded-lg bg-black/60 px-2 py-0.5 text-[10px] font-mono font-bold text-cyan-400 backdrop-blur-md border border-cyan-400/30 shadow-xs">
+                  #{project.index}
                 </div>
 
-                {/* Title */}
-                <h3 className="text-base sm:text-lg font-bold text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
-                  {project.title}
-                </h3>
-
-                {/* Description */}
-                <p className="mt-1.5 text-xs text-[var(--color-muted)] leading-relaxed line-clamp-2">
-                  {project.description}
-                </p>
+                {/* Category Badge */}
+                <div className="absolute top-3 right-3 rounded-lg bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-slate-200 backdrop-blur-md border border-white/20">
+                  {project.category}
+                </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="mt-4 pt-3.5 border-t border-[var(--color-border)] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {project.demo && (
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
-                    >
-                      <span>Live Demo</span>
-                      <FaExternalLinkAlt className="text-[9px]" />
-                    </a>
-                  )}
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="View Github Repository"
-                      className="text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors ml-1"
-                    >
-                      <FaGithub />
-                    </a>
-                  )}
+              {/* Content Area */}
+              <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
+                <div>
+                  {/* Tech Badges */}
+                  <div className="flex flex-wrap gap-1 mb-2.5">
+                    {project.tech.slice(0, 4).map((t) => (
+                      <span
+                        key={t}
+                        className="rounded border border-[var(--color-border)] bg-white/5 px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold text-cyan-300"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                    {project.tech.length > 4 && (
+                      <span className="rounded border border-[var(--color-border)] bg-white/5 px-1.5 py-0.5 text-[9px] font-medium text-[var(--color-subtle)]">
+                        +{project.tech.length - 4}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-base sm:text-lg font-bold text-[var(--color-text)] group-hover:text-cyan-400 transition-colors leading-snug">
+                    {project.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="mt-1.5 text-xs text-[var(--color-muted)] leading-relaxed line-clamp-2">
+                    {project.description}
+                  </p>
                 </div>
 
-                <button
-                  onClick={() => setSelectedProject(project)}
-                  type="button"
-                  className="inline-flex items-center gap-1 rounded-lg bg-cyan-500/10 px-2.5 py-1 text-[11px] font-bold text-cyan-400 hover:bg-cyan-500/20 border border-cyan-400/30 transition-all hover:scale-105"
-                >
-                  <FaBookOpen className="text-[9px]" />
-                  <span>Case Study</span>
-                </button>
+                {/* Action Buttons */}
+                <div className="mt-4 pt-3.5 border-t border-[var(--color-border)] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => isDragging && e.preventDefault()}
+                        className="inline-flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                      >
+                        <span>Live Demo</span>
+                        <FaExternalLinkAlt className="text-[9px]" />
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => isDragging && e.preventDefault()}
+                        aria-label="View Github Repository"
+                        className="text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors ml-1"
+                      >
+                        <FaGithub />
+                      </a>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (!isDragging) setSelectedProject(project);
+                    }}
+                    type="button"
+                    className="inline-flex items-center gap-1 rounded-lg bg-cyan-500/10 px-2.5 py-1 text-[11px] font-bold text-cyan-400 hover:bg-cyan-500/20 border border-cyan-400/30 transition-all hover:scale-105"
+                  >
+                    <FaBookOpen className="text-[9px]" />
+                    <span>Case Study</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </motion.div>
-        ))}
+          ))}
+        </motion.div>
       </div>
 
       {/* Interactive Carousel Pagination Dots */}
@@ -477,11 +565,11 @@ const FeaturedProjectsCarousel = () => {
         {allFeaturedProjects.map((_, dotIdx) => (
           <button
             key={`dot-${dotIdx}`}
-            onClick={() => scrollToIndex(dotIdx)}
+            onClick={() => glideToIndex(START_INDEX + dotIdx)}
             type="button"
             aria-label={`Jump to project slide ${dotIdx + 1}`}
             className={`h-2 rounded-full transition-all duration-300 ${
-              dotIdx === currentIndex
+              dotIdx === activeDotIndex
                 ? "w-8 bg-linear-to-r from-purple-500 to-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.7)]"
                 : "w-2 bg-[var(--color-border)] hover:bg-cyan-400/50"
             }`}
