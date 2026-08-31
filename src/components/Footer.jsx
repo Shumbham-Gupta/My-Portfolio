@@ -1,14 +1,15 @@
 import React from "react";
-import { Link } from "react-scroll";
+import { Link } from "react-router-dom";
 import { FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt } from "react-icons/fa";
 
 const navLinks = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/skills", label: "Skills" },
+  { path: "/projects", label: "Projects" },
+  { path: "/certifications", label: "Certifications" },
+  { path: "/experience", label: "Experience" },
+  { path: "/contact", label: "Contact" },
 ];
 
 const socialLinks = [
@@ -70,11 +71,8 @@ const Footer = () => {
             <div className="grid gap-3">
               {navLinks.map((link) => (
                 <Link
-                  key={link.id}
-                  to={link.id}
-                  smooth
-                  duration={500}
-                  offset={-76}
+                  key={link.path}
+                  to={link.path}
                   className="cursor-pointer text-sm font-semibold text-[var(--color-muted)] transition hover:text-cyan-500"
                 >
                   {link.label}

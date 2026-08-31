@@ -74,7 +74,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden section-surface px-5 py-24 sm:px-6 lg:px-8">
+    <section id="contact" className="relative overflow-hidden section-surface px-4 py-8 sm:py-16 md:py-20 lg:py-24 sm:px-6 lg:px-8">
       <div className="absolute inset-0">
         <div className="absolute left-0 top-1/4 h-72 w-72 glow-purple rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-0 h-72 w-72 glow-cyan rounded-full blur-3xl animate-pulse delay-700"></div>

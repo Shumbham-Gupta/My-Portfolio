@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-scroll";
-import { FaArrowRight, FaChevronDown, FaDownload, FaGithub, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaArrowRight, FaDownload, FaFilePdf, FaGithub, FaLinkedin } from "react-icons/fa";
 import profilePic from "../assets/updatedProfile.webp";
 
 const MotionDiv = motion.div;
@@ -10,6 +10,13 @@ const MotionP = motion.p;
 const MotionA = motion.a;
 
 const roleBadges = ["MERN Stack Developer", "Data Analytics Enthusiast", "B.Tech CSE"];
+
+const TYPED_ROLES = [
+  "Full Stack MERN Developer",
+  "Data Analytics Enthusiast",
+  "AI & SaaS Web Builder",
+  "React & Node.js Specialist",
+];
 
 const easeOutSmooth = [0.22, 1, 0.36, 1];
 
@@ -29,11 +36,38 @@ const item = {
   },
 };
 
-const Hero = () => {
+const Hero = ({ onOpenResume }) => {
+  const [roleIndex, setRoleIndex] = React.useState(0);
+  const [currentText, setCurrentText] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  React.useEffect(() => {
+    const fullText = TYPED_ROLES[roleIndex];
+    const typingSpeed = isDeleting ? 45 : 85;
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setCurrentText(fullText.substring(0, currentText.length + 1));
+        if (currentText === fullText) {
+          // Pause at full word
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setCurrentText(fullText.substring(0, currentText.length - 1));
+        if (currentText === "") {
+          setIsDeleting(false);
+          setRoleIndex((prev) => (prev + 1) % TYPED_ROLES.length);
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, roleIndex]);
+
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden section-surface px-4 pb-14 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:px-8"
+      className="relative flex min-h-[calc(100vh-4rem)] items-center overflow-hidden section-surface px-4 pb-10 pt-6 sm:px-6 sm:pb-16 sm:pt-12 lg:pt-16 lg:px-8"
     >
       <MotionDiv
         animate={{ x: [0, 40, 0], y: [0, 24, 0], scale: [1, 1.12, 1] }}
@@ -56,7 +90,7 @@ const Hero = () => {
         >
           <MotionDiv
             variants={item}
-            className="mx-auto mb-6 inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-white/10 px-4 py-2 text-sm font-semibold text-[var(--color-text)] shadow-[var(--shadow-soft)] backdrop-blur lg:mx-0"
+            className="mx-auto mb-6 hidden sm:inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[var(--color-border)] bg-white/10 px-4 py-2 text-sm font-semibold text-[var(--color-text)] shadow-[var(--shadow-soft)] backdrop-blur lg:mx-0"
           >
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75"></span>
@@ -75,9 +109,19 @@ const Hero = () => {
             </span>
           </MotionH1>
 
+          <MotionDiv
+            variants={item}
+            className="mt-3 min-h-[36px] sm:min-h-[44px] flex items-center justify-center lg:justify-start gap-2"
+          >
+            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-purple-400 to-cyan-300">
+              {currentText}
+            </span>
+            <span className="inline-block w-[3px] h-6 sm:h-8 bg-cyan-400 animate-pulse rounded-full shadow-[0_0_8px_rgba(34,211,238,0.9)]"></span>
+          </MotionDiv>
+
           <MotionP
             variants={item}
-            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[var(--color-muted)] sm:text-lg lg:mx-0"
+            className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[var(--color-muted)] sm:text-lg lg:mx-0"
           >
             I build responsive MERN applications and data-driven dashboards with a focus on
             clean interfaces, practical workflows, and reliable full-stack implementation.
@@ -102,30 +146,22 @@ const Hero = () => {
             className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start"
           >
             <Link
-              to="projects"
-              smooth
-              duration={500}
-              offset={-76}
+              to="/projects"
               className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-[0_0_22px_rgba(139,92,246,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(34,211,238,0.45)]"
             >
               View Projects
               <FaArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            <a
-              href="/Shubham_Gupta_Resume.pdf"
-              download="Shubham_Gupta_Resume.pdf"
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
+              onClick={onOpenResume}
               className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-cyan-400/50 bg-cyan-500/10 px-6 py-3 text-base font-semibold text-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:bg-cyan-500/20 hover:shadow-[0_0_26px_rgba(34,211,238,0.4)]"
             >
-              <FaDownload className="text-sm" />
-              Download CV
-            </a>
+              <FaFilePdf className="text-sm" />
+              Preview Resume
+            </button>
             <Link
-              to="contact"
-              smooth
-              duration={500}
-              offset={-76}
+              to="/contact"
               className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] px-6 py-3 text-base font-semibold text-[var(--color-text)] transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-400 hover:text-cyan-500"
             >
               Contact Me
@@ -195,30 +231,6 @@ const Hero = () => {
           </div>
         </MotionDiv>
       </div>
-
-      <MotionDiv
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 lg:block"
-      >
-        <Link
-          to="about"
-          smooth
-          duration={500}
-          offset={-76}
-          aria-label="Scroll to About section"
-          className="flex cursor-pointer flex-col items-center gap-2 text-[var(--color-subtle)] transition-colors hover:text-cyan-500"
-        >
-          <span className="text-xs font-semibold uppercase tracking-[0.22em]">Scroll</span>
-          <MotionDiv
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <FaChevronDown />
-          </MotionDiv>
-        </Link>
-      </MotionDiv>
     </section>
   );
 };

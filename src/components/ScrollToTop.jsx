@@ -37,7 +37,7 @@ const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.95 }}
-          className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-[var(--color-border)] bg-linear-to-br from-purple-600 to-cyan-600 text-white shadow-[0_0_24px_rgba(34,211,238,0.45)] backdrop-blur transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-[var(--color-border)] bg-linear-to-br from-purple-600 to-cyan-600 text-white shadow-[0_0_24px_rgba(34,211,238,0.45)] backdrop-blur transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400"
         >
           <FaChevronUp className="text-lg" />
         </motion.button>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaRobot,
@@ -8,6 +9,8 @@ import {
   FaDownload,
   FaExternalLinkAlt,
   FaTrashAlt,
+  FaBolt,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 const sampleQuestions = [
@@ -19,6 +22,60 @@ const sampleQuestions = [
   { label: "📥 Download Resume", query: "How can I download Shubham's resume?" },
   { label: "📬 Contact & Availability", query: "Is Shubham available for full-time hiring?" },
 ];
+
+const PORTFOLIO_CONTEXT = `
+You are Shubham Gupta's official AI Portfolio Assistant. Your role is to answer questions from recruiters, hiring managers, and visitors about Shubham Gupta's software engineering background, full-stack MERN projects, data analytics skills, and hiring availability.
+
+Candidate Profile:
+- Name: Shubham Gupta
+- Title: Full Stack MERN Developer & Data Analytics Enthusiast
+- Degree: B.Tech in Computer Science & Engineering
+- Email: shubham959gupta@gmail.com / guptashubham20042004@gmail.com
+- LinkedIn: https://www.linkedin.com/in/shubham16gupta/
+- GitHub: https://github.com/Shumbham-Gupta
+- Status: Available for Full-Stack Developer, Frontend/Backend, and Data Analyst roles (Full-time / Remote / Relocation).
+
+Current Work Experience:
+1. Full Stack Developer at LaunchEd Global (May 2026 – Present) [https://launchedglobal.in]:
+   - Leading primary web platform engineering with React 19, Node.js, Express, MongoDB.
+   - Built mentor-led course catalogs, student internship funnels, and counseling workflows.
+   - Integrated Razorpay secure checkout, structured JSON-LD SEO schema, and achieved 99.9% uptime.
+2. Full Stack Intern at JiPanditJi (Jan 2026 – Apr 2026) [https://jipanditji.com/]:
+   - Engineered responsive client interfaces and booking inquiry workflows.
+   - Assisted in REST API endpoint creation and Cashfree payment checkout integration.
+
+Featured Projects:
+1. TaskInfus — Enterprise EMS (React 19, Node.js, Express, MongoDB, Tailwind CSS v4, JWT Auth):
+   - Multi-tier Role-Based Access Control (RBAC), department workload bar charts across 7 departments, attendance clock-in/out timers, leave approval workflows, and 1-click CSV exports.
+2. AI Expense Intelligence (Python, JavaScript, Gemini AI, Telegram Bot API, Docker):
+   - Real-time expense logging via Telegram bot chat & OCR receipt scanning, Gemini AI predictive spending advisor, and monthly budget alerts.
+3. LaunchEd Global Platform (React, Node, Express, MongoDB, Razorpay):
+   - Production overseas education and upskilling platform.
+4. AI Virtual Assistant (React, Node, Express, MongoDB, Gemini API):
+   - Conversational assistant with natural language understanding and syntax highlighting.
+5. User Authentication System (React, Node, Express, MongoDB, JWT, BCrypt):
+   - Robust authentication flow with salted hashing and protected route guards.
+6. Mock E-Commerce Cart (React, Express, Node, MongoDB, Tailwind CSS):
+   - Real-time cart state management, stock validation, and checkout simulation.
+7. Task Management Web App (React, Express, MongoDB, JWT):
+   - Authenticated task organizer with status workflows and tag filtering.
+8. Electric Vehicle Sales Analysis (Power BI, SQL, Excel):
+   - Power BI dashboard analyzing EV market trends, manufacturer share, and adoption growth with custom DAX KPIs.
+9. Blinkit Sales Dashboard (Power BI, DAX, Power Query, Excel):
+   - Retail sales intelligence report evaluating revenue by item category, fat content, and outlet tier.
+
+Technical Skills:
+- Frontend: React 19, React.js, JavaScript (ES6+), Tailwind CSS, Framer Motion, HTML5, CSS3.
+- Backend: Node.js, Express.js, Python, RESTful APIs, JWT Auth, API Rate Limiting.
+- Databases: MongoDB, PostgreSQL, MySQL, Data Modeling, Mongoose.
+- Analytics & BI: Power BI, DAX, Power Query, Data Modeling, SQL, Advanced Excel.
+- AI & Integrations: Google Gemini AI API, Telegram Bot API, Razorpay Checkout, Cashfree, OCR.
+- DevOps: Git, GitHub, Docker, Postman, Render Deployment.
+
+Style Guidelines:
+- Keep answers concise, enthusiastic, professional, and well-structured using markdown formatting (bullet points, bold highlights, headers).
+- Always offer helpful next steps or relevant actions when suitable.
+`;
 
 const knowledgeBase = {
   greetings: {
@@ -34,7 +91,7 @@ const knowledgeBase = {
   launched: {
     patterns: ["launched", "launched global", "current role", "current company", "work experience", "job"],
     response:
-      "### 🌐 Full Stack Developer at LaunchEd Global\n* **Period:** May 2026 – Present (Current Role)\n* **Company Platform:** [LaunchEd Global (launchedglobal.in)](https://launchedglobal.in)\n* **Key Contributions:**\n  * Leading primary web platform engineering, scaling, and system maintenance using React 19, Node.js, Express, and MongoDB.\n  * Architected mentor-led course catalogs, internship pipelines, and student admission counseling portals.\n  * Integrated Razorpay secure checkout, multi-channel lead funnels, and enterprise structured JSON-LD SEO schema.\n  * Drove cross-device responsiveness, mobile UX, API rate-limiting, and 99.9% uptime reliability.",
+      "### 🌐 Full Stack Developer at LaunchEd Global\n* **Period:** May 2026 – Present (Current Role)\n* **Company Platform:** [LaunchEd Global (launchedglobal.in)](https://launchedglobal.in)\n* **Key Contributions:**\n  * Leading primary web platform engineering using React 19, Node.js, Express, and MongoDB.\n  * Architected mentor-led course catalogs, internship pipelines, and student consulting portals.\n  * Integrated Razorpay secure checkout, multi-channel lead funnels, and enterprise JSON-LD SEO schema.\n  * Drove cross-device responsiveness, mobile UX, API rate-limiting, and 99.9% uptime reliability.",
     actions: [
       { label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" },
       { label: "View Career Roadmap", type: "scroll", target: "experience" },
@@ -43,7 +100,7 @@ const knowledgeBase = {
   jipanditji: {
     patterns: ["jipanditji", "internship", "intern", "previous role", "past experience"],
     response:
-      "### 🟠 Full Stack Intern at JiPanditJi\n* **Period:** Jan 2026 – Apr 2026\n* **Platform:** [JiPanditJi (jipanditji.com)](https://jipanditji.com/)\n* **Key Contributions:**\n  * Developed responsive client interfaces and booking inquiry workflows for verified pandit services across India.\n  * Assisted in REST API endpoint creation and Cashfree payment checkout integration.\n  * Optimized asset loading and mobile performance across diverse devices.\n  * Elevated from Intern to Full Stack Developer following high-impact full-stack delivery.",
+      "### 🟠 Full Stack Intern at JiPanditJi\n* **Period:** Jan 2026 – Apr 2026\n* **Platform:** [JiPanditJi (jipanditji.com)](https://jipanditji.com/)\n* **Key Contributions:**\n  * Developed responsive client interfaces and booking inquiry workflows for verified pandit services across India.\n  * Assisted in REST API endpoint creation and Cashfree payment checkout integration.\n  * Optimized asset loading and mobile performance across diverse devices.",
     actions: [
       { label: "Visit JiPanditJi", type: "link", url: "https://jipanditji.com/" },
       { label: "View Career Roadmap", type: "scroll", target: "experience" },
@@ -70,7 +127,7 @@ const knowledgeBase = {
   projects: {
     patterns: ["projects", "all projects", "portfolio projects", "built", "apps", "what have you built"],
     response:
-      "### 📁 Shubham's 9 Featured Projects:\n1. 🏢 **TaskInfus EMS** — Enterprise employee management with RBAC & attendance.\n2. 💳 **AI Expense Intelligence** — Telegram & OCR expense tracking with Gemini AI.\n3. 🌐 **LaunchEd Global Platform** — Production edtech & overseas education platform.\n4. 🤖 **AI Virtual Assistant** — Conversational Gemini AI assistant with MERN stack.\n5. 🔐 **User Authentication System** — JWT auth flow with bcrypt & protected routes.\n6. 🛒 **VibeCommerce** — Full-stack mock e-commerce shopping cart experience.\n7. 📋 **Task Management Web App** — Kanban productivity workspace with auth.\n8. 🚗 **Electric Vehicle Sales Analysis** — Power BI EV market analytics dashboard.\n9. 📊 **Blinkit Sales Dashboard** — Power BI retail sales & category KPI reporting.",
+      "### 📁 Shubham's 9 Featured Projects:\n1. 🏢 **TaskInfus EMS** — Enterprise employee management with RBAC & attendance.\n2. 💳 **AI Expense Intelligence** — Telegram & OCR expense tracking with Gemini AI.\n3. 🌐 **LaunchEd Global Platform** — Production edtech & overseas education platform.\n4. 🤖 **AI Virtual Assistant** — Conversational Gemini AI assistant with MERN stack.\n5. 🔐 **User Authentication System** — JWT auth flow with bcrypt & protected routes.\n6. 🛒 **Mock E-Commerce Cart** — Full-stack mock shopping cart experience.\n7. 📋 **Task Management Web App** — Productivity workspace with JWT auth.\n8. 🚗 **Electric Vehicle Sales Analysis** — Power BI EV market analytics dashboard.\n9. 📊 **Blinkit Sales Dashboard** — Power BI retail sales & category KPI reporting.",
     actions: [
       { label: "Scroll to Projects", type: "scroll", target: "projects" },
       { label: "View GitHub Profile", type: "link", url: "https://github.com/Shumbham-Gupta" },
@@ -88,7 +145,7 @@ const knowledgeBase = {
   contact: {
     patterns: ["hire", "contact", "available", "email", "phone", "linkedin", "opportunity", "freelance", "salary", "job offer"],
     response:
-      "### 📬 Let's Connect & Collaborate!\nShubham is **currently open to Full-Stack Developer, Frontend/Backend, and Data Analytics opportunities**.\n\n* 📧 **Email:** [guptashubham20042004@gmail.com](mailto:guptashubham20042004@gmail.com)\n* 💼 **LinkedIn:** [linkedin.com/in/shubham16gupta](https://www.linkedin.com/in/shubham16gupta/)\n* 🐙 **GitHub:** [github.com/Shumbham-Gupta](https://github.com/Shumbham-Gupta)\n* 📍 **Location:** India (Open to Remote / Relocation)",
+      "### 📬 Let's Connect & Collaborate!\nShubham is **currently open to Full-Stack Developer, Frontend/Backend, and Data Analytics opportunities**.\n\n* 📧 **Email:** [shubham959gupta@gmail.com](mailto:shubham959gupta@gmail.com)\n* 💼 **LinkedIn:** [linkedin.com/in/shubham16gupta](https://www.linkedin.com/in/shubham16gupta/)\n* 🐙 **GitHub:** [github.com/Shumbham-Gupta](https://github.com/Shumbham-Gupta)\n* 📍 **Location:** India (Open to Remote / Relocation)",
     actions: [
       { label: "Send Message", type: "scroll", target: "contact" },
       { label: "Open LinkedIn", type: "link", url: "https://www.linkedin.com/in/shubham16gupta/" },
@@ -106,26 +163,135 @@ const knowledgeBase = {
   },
 };
 
-const getAIResponse = (userQuery) => {
+const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Word-boundary based matcher with score ranking
+const getLocalKnowledgeResponse = (userQuery) => {
   const query = userQuery.toLowerCase().trim();
+
+  let bestMatch = null;
+  let highestScore = 0;
 
   for (const key in knowledgeBase) {
     const item = knowledgeBase[key];
-    const match = item.patterns.some((pattern) => query.includes(pattern));
-    if (match) {
-      return item;
+    let score = 0;
+
+    for (const pattern of item.patterns) {
+      const regex = new RegExp(`\\b${escapeRegex(pattern)}\\b`, "i");
+      if (regex.test(query)) {
+        // Multi-word patterns get higher weight
+        score += pattern.split(" ").length * 2;
+      }
     }
+
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = item;
+    }
+  }
+
+  if (bestMatch) {
+    return bestMatch;
   }
 
   return {
     response:
-      "I understand you're interested in Shubham's work! Here are a few quick topics you can explore:\n\n* **LaunchEd Global Experience** (His current Full Stack role)\n* **9 Production Projects** (TaskInfus EMS, AI Expense Tracker, VibeCommerce, etc.)\n* **Tech Stack & Skills** (React, Node, Python, MongoDB, Power BI)\n* **Resume & Hiring Details**",
+      "I'm here to help you explore Shubham's software engineering background!\n\n* **Current Role:** Full Stack Developer at LaunchEd Global\n* **Core Skills:** React 19, Node.js, Express, MongoDB, Python, Power BI\n* **Key Projects:** TaskInfus EMS, AI Expense Intelligence, LaunchEd Global\n* **Status:** Open to Full-Stack and Analytics opportunities!",
     actions: [
       { label: "View Projects", type: "scroll", target: "projects" },
       { label: "Tech Stack", type: "scroll", target: "skills" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
   };
+};
+
+// Live Google Gemini API with conversational memory & hybrid fallback
+const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
+  const apiKey =
+    import.meta.env.VITE_GEMINI_API_KEY ||
+    "AIzaSyAUV-FHG0wnUUjxVrAY944NuT5RPHjHjF8";
+
+  if (!apiKey) {
+    return getLocalKnowledgeResponse(userQuery);
+  }
+
+  try {
+    // Format conversation history for Gemini multi-turn chat
+    const historyContents = conversationHistory
+      .filter((msg) => msg.text && msg.id !== 1)
+      .slice(-6)
+      .map((msg) => ({
+        role: msg.sender === "user" ? "user" : "model",
+        parts: [{ text: msg.text }],
+      }));
+
+    const contents = [
+      ...historyContents,
+      {
+        role: "user",
+        parts: [{ text: userQuery }],
+      },
+    ];
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: PORTFOLIO_CONTEXT }],
+          },
+          contents,
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 600,
+          },
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Gemini API returned status ${res.status}`);
+    }
+
+    const data = await res.json();
+    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!candidateText) {
+      throw new Error("No candidate text in response");
+    }
+
+    // Dynamic contextual actions based on AI output
+    const dynamicActions = [];
+    const lowerText = (candidateText + " " + userQuery).toLowerCase();
+
+    if (lowerText.includes("launched")) {
+      dynamicActions.push({ label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" });
+    }
+    if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
+      dynamicActions.push({ label: "TaskInfus Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
+    }
+    if (lowerText.includes("expense") || lowerText.includes("telegram")) {
+      dynamicActions.push({ label: "AI Expense Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
+    }
+    if (lowerText.includes("project") || lowerText.includes("built") || dynamicActions.length === 0) {
+      dynamicActions.push({ label: "View Projects", type: "scroll", target: "projects" });
+    }
+    if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("contact")) {
+      dynamicActions.push({ label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" });
+      dynamicActions.push({ label: "Contact Shubham", type: "scroll", target: "contact" });
+    }
+
+    return {
+      response: candidateText,
+      actions: dynamicActions.slice(0, 3),
+      isLiveGemini: true,
+    };
+  } catch (err) {
+    console.warn("Gemini API error, falling back to local NLP engine:", err);
+    return getLocalKnowledgeResponse(userQuery);
+  }
 };
 
 const renderFormattedText = (text, isDarkMode) => {
@@ -150,7 +316,7 @@ const renderFormattedText = (text, isDarkMode) => {
       return part;
     });
 
-    if (line.startsWith("* ")) {
+    if (line.startsWith("* ") || line.startsWith("- ")) {
       return (
         <p key={lineIdx} className={`ml-2 my-0.5 leading-relaxed ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
           • {formattedLine}
@@ -166,7 +332,24 @@ const renderFormattedText = (text, isDarkMode) => {
   });
 };
 
+// Modern Neural AI Sparkle Icon
+const SparkleAIIcon = ({ className = "w-5 h-5" }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M12 1L14.4 8.6L22 11L14.4 13.4L12 21L9.6 13.4L2 11L9.6 8.6L12 1Z" />
+    <path
+      d="M19 14L20.2 17.8L24 19L20.2 20.2L19 24L17.8 20.2L14 19L17.8 17.8L19 14Z"
+      opacity="0.85"
+    />
+  </svg>
+);
+
 const AIAssistantWidget = ({ isDark = false }) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -183,6 +366,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
   ]);
   const [inputQuery, setInputQuery] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [streamingMessageId, setStreamingMessageId] = useState(null);
   const messagesEndRef = useRef(null);
   const widgetRef = useRef(null);
 
@@ -194,7 +378,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
     if (isOpen) {
       scrollToBottom();
     }
-  }, [messages, isOpen, isTyping]);
+  }, [messages, isOpen, isTyping, streamingMessageId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -214,9 +398,40 @@ const AIAssistantWidget = ({ isDark = false }) => {
     };
   }, [isOpen]);
 
-  const handleSendMessage = (textToSend) => {
+  // Streaming typewriter animation engine
+  const streamResponseText = (fullText, actions, messageId) => {
+    const words = fullText.split(" ");
+    let currentWordIndex = 0;
+    let accumulatedText = "";
+
+    setStreamingMessageId(messageId);
+
+    const interval = setInterval(() => {
+      if (currentWordIndex < words.length) {
+        accumulatedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
+        currentWordIndex++;
+
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, text: accumulatedText } : msg
+          )
+        );
+      } else {
+        clearInterval(interval);
+        setStreamingMessageId(null);
+        setIsTyping(false);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, text: fullText, actions } : msg
+          )
+        );
+      }
+    }, 22);
+  };
+
+  const handleSendMessage = async (textToSend) => {
     const query = textToSend || inputQuery;
-    if (!query.trim()) return;
+    if (!query.trim() || isTyping) return;
 
     const userMessage = {
       id: Date.now(),
@@ -228,17 +443,22 @@ const AIAssistantWidget = ({ isDark = false }) => {
     setInputQuery("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      const aiResult = getAIResponse(query);
-      const aiMessage = {
-        id: Date.now() + 1,
+    const newAiMessageId = Date.now() + 1;
+
+    // Create placeholder for AI message
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: newAiMessageId,
         sender: "ai",
-        text: aiResult.response,
-        actions: aiResult.actions || [],
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-      setIsTyping(false);
-    }, 600);
+        text: "",
+        actions: [],
+      },
+    ]);
+
+    // Fetch response from Gemini / Hybrid local engine with conversational memory
+    const aiResult = await fetchGeminiResponse(query, messages);
+    streamResponseText(aiResult.response, aiResult.actions || [], newAiMessageId);
   };
 
   const handleActionClick = (action) => {
@@ -247,13 +467,20 @@ const AIAssistantWidget = ({ isDark = false }) => {
       return;
     }
 
-    if (action.type === "scroll") {
-      const element = document.getElementById(action.target);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-        if (window.innerWidth < 768) {
-          setIsOpen(false);
-        }
+    if (action.type === "scroll" || action.type === "navigate") {
+      const targetMap = {
+        home: "/",
+        about: "/about",
+        skills: "/skills",
+        projects: "/projects",
+        certifications: "/certifications",
+        experience: "/experience",
+        contact: "/contact",
+      };
+      const path = targetMap[action.target] || `/${action.target}`;
+      navigate(path);
+      if (window.innerWidth < 768) {
+        setIsOpen(false);
       }
     } else if (action.type === "link") {
       window.open(action.url, "_blank", "noreferrer");
@@ -284,45 +511,52 @@ const AIAssistantWidget = ({ isDark = false }) => {
 
   return (
     <div ref={widgetRef}>
-      {/* Floating Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* Floating Trigger Button - Ultra Modern Neural FAB */}
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         <motion.button
           onClick={() => setIsOpen((prev) => !prev)}
           type="button"
           aria-label="Open Shubham's AI Assistant"
           whileHover={{ scale: 1.08, y: -2 }}
-          whileTap={{ scale: 0.94 }}
-          className={`group relative flex items-center gap-3 rounded-full border px-4 py-3 shadow-lg backdrop-blur-md transition-all duration-300 ${
-            isDark
-              ? "border-cyan-400/50 bg-slate-950/90 text-white shadow-[0_0_30px_rgba(34,211,238,0.45)] hover:border-cyan-400 hover:shadow-[0_0_40px_rgba(34,211,238,0.7)]"
-              : "border-purple-400/40 bg-white/95 text-slate-800 shadow-[0_8px_30px_rgba(124,58,237,0.22)] hover:border-purple-500 hover:shadow-[0_8px_35px_rgba(124,58,237,0.35)]"
-          }`}
+          whileTap={{ scale: 0.92 }}
+          className="group relative flex items-center gap-3 rounded-full p-[1.5px] shadow-2xl transition-all duration-500"
         >
-          <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-r from-purple-600 to-cyan-500 text-white shadow-inner">
-            <FaRobot className="text-lg animate-bounce" />
-            <span
-              className={`absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-extrabold ring-2 ${
-                isDark ? "text-slate-950 ring-slate-950" : "text-white ring-white"
-              }`}
-            >
-              AI
-            </span>
-          </span>
+          {/* Animated Neon Gradient Border Ring */}
+          <span className="absolute inset-0 rounded-full bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 opacity-75 blur-[3px] transition duration-500 group-hover:opacity-100 group-hover:blur-[6px] animate-pulse" />
 
-          <div className="hidden text-left sm:block">
-            <p
-              className={`text-xs font-bold leading-tight ${
-                isDark
-                  ? "text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-cyan-400"
-                  : "text-transparent bg-clip-text bg-linear-to-r from-purple-700 to-cyan-700"
-              }`}
-            >
-              Ask Shubham's AI
-            </p>
-            <p className={`text-[10px] ${isDark ? "text-cyan-300/80" : "text-purple-600 font-medium"}`}>
-              Active & Ready
-            </p>
-          </div>
+          {/* Inner Button Pill / Circular FAB on Mobile */}
+          <span
+            className={`relative flex items-center gap-2.5 sm:gap-3 rounded-full p-2 sm:px-4 sm:py-2.5 backdrop-blur-xl transition-all duration-300 ${
+              isDark
+                ? "bg-slate-950/95 text-white shadow-[0_0_25px_rgba(0,0,0,0.8)] border border-cyan-400/30 group-hover:border-cyan-400/60"
+                : "bg-white/95 text-slate-900 shadow-[0_8px_30px_rgba(124,58,237,0.25)] border border-purple-200/80 group-hover:border-purple-400"
+            }`}
+          >
+            {/* Holographic Neural AI Sparkle Orb */}
+            <span className="relative flex h-11 w-11 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(34,211,238,0.55)] transition-transform duration-300 group-hover:scale-105">
+              <SparkleAIIcon className="h-5 w-5 sm:h-5 sm:w-5 animate-pulse" />
+              <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-slate-950"></span>
+              </span>
+            </span>
+
+            <div className="hidden text-left sm:block pr-1">
+              <p
+                className={`text-xs font-extrabold tracking-wide leading-tight ${
+                  isDark
+                    ? "text-transparent bg-clip-text bg-linear-to-r from-cyan-300 via-purple-300 to-pink-300"
+                    : "text-transparent bg-clip-text bg-linear-to-r from-purple-700 to-cyan-700"
+                }`}
+              >
+                Ask Shubham&apos;s AI
+              </p>
+              <p className={`text-[10px] font-semibold flex items-center gap-1.5 ${isDark ? "text-cyan-400/90" : "text-purple-600"}`}>
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Online
+              </p>
+            </div>
+          </span>
         </motion.button>
       </div>
 
@@ -334,7 +568,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.94 }}
             transition={{ duration: 0.3 }}
-            className={`fixed bottom-24 left-4 right-4 z-50 mx-auto max-h-[85vh] w-auto max-w-[420px] overflow-hidden rounded-3xl border backdrop-blur-2xl sm:right-6 sm:left-auto sm:w-[420px] ${
+            className={`fixed bottom-20 left-3 right-3 z-50 mx-auto max-h-[82vh] w-auto max-w-[420px] overflow-hidden rounded-3xl border backdrop-blur-2xl sm:bottom-24 sm:right-6 sm:left-auto sm:w-[420px] sm:max-h-[85vh] ${
               isDark
                 ? "border-cyan-400/40 bg-slate-950/95 text-slate-100 shadow-[0_10px_50px_rgba(0,0,0,0.85),0_0_40px_rgba(34,211,238,0.3)]"
                 : "border-purple-200/80 bg-white text-slate-800 shadow-[0_20px_60px_rgba(30,41,59,0.22)] ring-1 ring-purple-100"
@@ -349,26 +583,21 @@ const AIAssistantWidget = ({ isDark = false }) => {
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-purple-600 to-cyan-500 text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-                  <FaRobot />
-                </span>
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-tr from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                  <SparkleAIIcon className="h-5 w-5" />
+                  <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
+                  </span>
+                </div>
                 <div>
-                  <h3 className={`text-sm font-bold flex items-center gap-2 ${isDark ? "text-white" : "text-slate-900"}`}>
-                    Shubham's AI Agent
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                        isDark
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                          : "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      }`}
-                    >
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      Online
+                  <h4 className="text-sm font-bold leading-tight flex items-center gap-1.5">
+                    Shubham&apos;s AI Assistant
+                    <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-extrabold text-emerald-400 border border-emerald-400/30">
+                      ONLINE
                     </span>
-                  </h3>
-                  <p className={`text-[11px] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                    Powered by Portfolio Intelligence
-                  </p>
+                  </h4>
+                  <p className="text-[11px] text-cyan-400 font-medium">Instant Q&amp;A &bull; Portfolio Intelligence</p>
                 </div>
               </div>
 
@@ -376,11 +605,12 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 <button
                   onClick={clearChat}
                   type="button"
-                  title="Clear Chat"
-                  className={`rounded-lg p-2 transition-colors ${
+                  aria-label="Clear chat history"
+                  title="Clear chat"
+                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
                     isDark
-                      ? "text-slate-400 hover:bg-white/10 hover:text-white"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                      ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                      : "text-slate-500 hover:bg-purple-100 hover:text-slate-800"
                   }`}
                 >
                   <FaTrashAlt className="text-xs" />
@@ -388,11 +618,11 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 <button
                   onClick={() => setIsOpen(false)}
                   type="button"
-                  title="Close Assistant"
-                  className={`rounded-lg p-2 transition-colors ${
+                  aria-label="Close assistant"
+                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
                     isDark
-                      ? "text-slate-400 hover:bg-white/10 hover:text-white"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                      ? "text-slate-400 hover:bg-slate-800 hover:text-white"
+                      : "text-slate-500 hover:bg-purple-100 hover:text-slate-900"
                   }`}
                 >
                   <FaTimes className="text-sm" />
@@ -400,34 +630,10 @@ const AIAssistantWidget = ({ isDark = false }) => {
               </div>
             </div>
 
-            {/* Quick Prompts Bar */}
+            {/* Message Thread */}
             <div
-              className={`no-scrollbar flex gap-2 overflow-x-auto border-b p-2.5 ${
-                isDark
-                  ? "border-slate-800/80 bg-slate-900/60"
-                  : "border-purple-100 bg-slate-50/90"
-              }`}
-            >
-              {sampleQuestions.map((q) => (
-                <button
-                  key={q.label}
-                  onClick={() => handleSendMessage(q.query)}
-                  type="button"
-                  className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium transition-all ${
-                    isDark
-                      ? "border-cyan-400/30 bg-cyan-950/40 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/60"
-                      : "border-purple-200 bg-white text-purple-700 shadow-xs hover:border-purple-400 hover:bg-purple-50"
-                  }`}
-                >
-                  {q.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Messages Body */}
-            <div
-              className={`flex h-[360px] flex-col gap-3.5 overflow-y-auto p-4 text-xs sm:text-sm ${
-                isDark ? "bg-slate-950/80" : "bg-slate-50/50"
+              className={`h-[360px] overflow-y-auto p-4 space-y-3.5 text-xs ${
+                isDark ? "bg-slate-950/60" : "bg-slate-50/70"
               }`}
             >
               {messages.map((msg) => (
@@ -436,36 +642,47 @@ const AIAssistantWidget = ({ isDark = false }) => {
                   className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
                 >
                   <div
-                    className={`max-w-[88%] rounded-2xl p-3.5 leading-relaxed ${
+                    className={`max-w-[88%] rounded-2xl p-3.5 shadow-sm leading-relaxed ${
                       msg.sender === "user"
-                        ? "bg-linear-to-r from-purple-600 to-cyan-600 text-white rounded-br-none shadow-md"
+                        ? "bg-linear-to-r from-purple-600 to-cyan-600 text-white rounded-br-none shadow-[0_4px_15px_rgba(139,92,246,0.3)]"
                         : isDark
-                        ? "border border-slate-800 bg-slate-900/90 text-slate-100 rounded-bl-none shadow-md"
-                        : "border border-slate-200/90 bg-white text-slate-900 rounded-bl-none shadow-sm"
+                        ? "bg-slate-900/90 text-slate-200 border border-slate-800/90 rounded-tl-none"
+                        : "bg-white text-slate-800 border border-purple-100/90 rounded-tl-none shadow-sm"
                     }`}
                   >
-                    <div className="text-xs sm:text-[13px]">
-                      {renderFormattedText(msg.text, isDark)}
-                    </div>
+                    {msg.sender === "ai" && !msg.text && streamingMessageId === msg.id ? (
+                      <div className="flex items-center gap-1.5 py-1">
+                        <span className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce"></span>
+                        <span className="h-2 w-2 rounded-full bg-purple-400 animate-bounce delay-150"></span>
+                        <span className="h-2 w-2 rounded-full bg-cyan-300 animate-bounce delay-300"></span>
+                      </div>
+                    ) : (
+                      <>
+                        {renderFormattedText(msg.text, isDark)}
+                        {streamingMessageId === msg.id && (
+                          <span className="inline-block w-[3px] h-3.5 bg-cyan-400 animate-pulse ml-1 align-middle" />
+                        )}
+                      </>
+                    )}
                   </div>
 
-                  {/* Message Action Chips */}
-                  {msg.actions && msg.actions.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {msg.actions.map((act, i) => (
+                  {/* Interactive Action Pills */}
+                  {msg.actions && msg.actions.length > 0 && streamingMessageId !== msg.id && (
+                    <div className="mt-2 flex flex-wrap gap-1.5 max-w-[90%]">
+                      {msg.actions.map((act, idx) => (
                         <button
-                          key={i}
+                          key={idx}
                           onClick={() => handleActionClick(act)}
                           type="button"
-                          className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[11px] font-semibold transition-all hover:-translate-y-0.5 ${
+                          className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all duration-200 hover:scale-105 ${
                             isDark
-                              ? "border-cyan-400/40 bg-slate-900/90 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-950"
-                              : "border-purple-200 bg-white text-purple-700 shadow-xs hover:border-purple-400 hover:bg-purple-50"
+                              ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
+                              : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400"
                           }`}
                         >
-                          {act.type === "link" && <FaExternalLinkAlt className="text-[10px]" />}
-                          {act.type === "download" && <FaDownload className="text-[10px]" />}
-                          {act.type === "scroll" && <FaArrowRight className="text-[10px]" />}
+                          {act.type === "link" && <FaExternalLinkAlt className="text-[9px]" />}
+                          {act.type === "download" && <FaDownload className="text-[9px]" />}
+                          {act.type === "scroll" && <FaArrowRight className="text-[9px]" />}
                           <span>{act.label}</span>
                         </button>
                       ))}
@@ -473,21 +690,30 @@ const AIAssistantWidget = ({ isDark = false }) => {
                   )}
                 </div>
               ))}
+              <div ref={messagesEndRef} />
+            </div>
 
-              {isTyping && (
-                <div
-                  className={`flex items-center gap-1.5 rounded-2xl border px-3.5 py-2.5 w-fit ${
+            {/* Quick Suggestion Chips */}
+            <div
+              className={`border-t px-3 py-2 overflow-x-auto no-scrollbar flex gap-1.5 ${
+                isDark ? "border-slate-800 bg-slate-900/60" : "border-purple-100 bg-purple-50/40"
+              }`}
+            >
+              {sampleQuestions.slice(0, 4).map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSendMessage(q.query)}
+                  disabled={isTyping}
+                  type="button"
+                  className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-medium transition-colors ${
                     isDark
-                      ? "border-slate-800 bg-slate-900/90 text-cyan-400"
-                      : "border-slate-200 bg-white text-purple-600 shadow-sm"
+                      ? "border-slate-800 bg-slate-900 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
+                      : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 disabled:opacity-50"
                   }`}
                 >
-                  <span className={`h-2 w-2 rounded-full animate-pulse ${isDark ? "bg-cyan-400" : "bg-purple-600"}`}></span>
-                  <span className={`h-2 w-2 rounded-full animate-pulse delay-150 ${isDark ? "bg-cyan-400" : "bg-purple-600"}`}></span>
-                  <span className={`h-2 w-2 rounded-full animate-pulse delay-300 ${isDark ? "bg-cyan-400" : "bg-purple-600"}`}></span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
+                  {q.label}
+                </button>
+              ))}
             </div>
 
             {/* Input Form */}
@@ -497,27 +723,26 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 handleSendMessage();
               }}
               className={`flex items-center gap-2 border-t p-3 ${
-                isDark
-                  ? "border-slate-800 bg-slate-950"
-                  : "border-purple-100 bg-white"
+                isDark ? "border-slate-800 bg-slate-950" : "border-purple-100 bg-white"
               }`}
             >
               <input
                 type="text"
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
-                placeholder="Ask about LaunchEd, TaskInfus, skills..."
-                className={`flex-1 rounded-xl border px-3.5 py-2.5 text-xs focus:outline-none transition-all ${
+                placeholder={isTyping ? "AI is typing response..." : "Ask Shubham's AI..."}
+                disabled={isTyping}
+                className={`flex-1 rounded-xl border px-3.5 py-2.5 text-xs font-medium transition-all focus:outline-none focus:ring-2 disabled:opacity-50 ${
                   isDark
-                    ? "border-slate-700 bg-slate-900/90 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                    : "border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-purple-500 focus:bg-white focus:ring-1 focus:ring-purple-500"
+                    ? "border-slate-800 bg-slate-900 text-white placeholder-slate-500 focus:border-cyan-400 focus:ring-cyan-400/30"
+                    : "border-purple-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-purple-500 focus:ring-purple-500/30"
                 }`}
               />
               <button
                 type="submit"
-                disabled={!inputQuery.trim()}
-                aria-label="Send message"
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 text-white shadow-md transition-all hover:scale-105 disabled:opacity-40"
+                disabled={!inputQuery.trim() || isTyping}
+                aria-label="Send query"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-cyan-600 text-white shadow-md transition-all hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
               >
                 <FaPaperPlane className="text-xs" />
               </button>
