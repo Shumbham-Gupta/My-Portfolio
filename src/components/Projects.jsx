@@ -11,9 +11,13 @@ import {
   FaShoppingCart,
   FaTasks,
   FaRobot,
+  FaUsers,
   FaFilter,
 } from "react-icons/fa";
 
+import imgTaskInfus from "../assets/project_taskinfus.png";
+import imgLaunchedGlobal from "../assets/project_launched_global.png";
+import imgAiExpenseTracker from "../assets/project_ai_expense_tracker.png";
 import imgAiAssistant from "../assets/project_ai_assistant.png";
 import imgUserAuth from "../assets/project_user_auth.png";
 import imgEcommerce from "../assets/project_ecommerce_cart.png";
@@ -26,6 +30,45 @@ const MotionP = motion.p;
 const MotionDiv = motion.div;
 
 const projects = [
+  {
+    title: "TaskInfus — Enterprise EMS",
+    category: "Enterprise SaaS (MERN)",
+    group: "mern",
+    icon: FaUsers,
+    image: imgTaskInfus,
+    description:
+      "A full-stack enterprise employee management system with role-based access control (RBAC), department workload analytics, attendance shift clock-in/out, leave approval workflows, and 1-click CSV exports.",
+    highlights: ["Admin executive analytics & RBAC", "Department workloads & performance scorecards", "Attendance clock-in & leave approval workflows"],
+    tech: ["React 19", "Node.js", "Express.js", "MongoDB", "Tailwind CSS v4", "JWT Auth"],
+    github: "https://github.com/Shumbham-Gupta/Employee_Management_System",
+    demo: "https://employee-management-system-frontend-5opl.onrender.com/login",
+  },
+  {
+    title: "AI Expense Intelligence",
+    category: "AI + FinTech Platform",
+    group: "mern",
+    icon: FaRobot,
+    image: imgAiExpenseTracker,
+    description:
+      "An automated expense tracking & financial advisor web app integrated with Telegram & receipt OCR scanning, powered by Google Gemini AI to analyze spending velocity, overspending trends, and budget limits.",
+    highlights: ["Telegram chat & OCR receipt tracking", "Gemini AI overspending & budget advisor", "Real-time analytics & budget alerts"],
+    tech: ["Python", "JavaScript", "Gemini AI", "Telegram Bot API", "HTML5 / CSS3", "Docker"],
+    github: "https://github.com/Shumbham-Gupta/AI_Expense_Tracker",
+    demo: "https://ai-expense-tracker-968h.onrender.com/",
+  },
+  {
+    title: "Launched Global Platform",
+    category: "Full Stack EdTech",
+    group: "mern",
+    icon: FaRobot,
+    image: imgLaunchedGlobal,
+    description:
+      "A production-ready overseas education & upskilling platform featuring mentor-led course catalogs, internship programs, study abroad consulting, and student workflows.",
+    highlights: ["Full-stack platform development", "Course catalogs & lead funnel", "Razorpay integration & SEO optimization"],
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Razorpay", "Tailwind CSS"],
+    github: "https://github.com/Shumbham-Gupta",
+    demo: "https://launchedglobal.in",
+  },
   {
     title: "AI Virtual Assistant",
     category: "AI + MERN App",
@@ -107,14 +150,14 @@ const projects = [
 ];
 
 const projectStats = [
-  { value: "6", label: "Featured projects" },
-  { value: "4", label: "MERN builds" },
+  { value: "9", label: "Featured projects" },
+  { value: "7", label: "Full-Stack & AI builds" },
   { value: "2", label: "BI dashboards" },
 ];
 
 const categoryTabs = [
   { id: "all", label: "All Work" },
-  { id: "mern", label: "MERN Stack Apps" },
+  { id: "mern", label: "Full-Stack & AI Apps" },
   { id: "analytics", label: "Analytics & Power BI" },
 ];
 

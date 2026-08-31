@@ -9,6 +9,7 @@ import Experience from "./components/Experience";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import AIAssistantWidget from "./components/AIAssistantWidget";
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -45,6 +46,7 @@ function App() {
         <Experience />
         <Contact />
         <Footer />
+        <AIAssistantWidget isDark={isDark} />
         <ScrollToTop />
       </div>
     </MotionConfig>
