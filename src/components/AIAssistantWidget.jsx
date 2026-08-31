@@ -2,15 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaRobot,
   FaTimes,
   FaPaperPlane,
   FaArrowRight,
   FaDownload,
   FaExternalLinkAlt,
   FaTrashAlt,
-  FaBolt,
-  FaCheckCircle,
 } from "react-icons/fa";
 
 const sampleQuestions = [
@@ -24,72 +21,110 @@ const sampleQuestions = [
 ];
 
 const PORTFOLIO_CONTEXT = `
-You are Shubham Gupta's official AI Portfolio Assistant. Your role is to answer questions from recruiters, hiring managers, and visitors about Shubham Gupta's software engineering background, full-stack MERN projects, data analytics skills, and hiring availability.
+You are Shubham Gupta's official AI Portfolio Assistant. Answer concisely, enthusiastically, and accurately based on Shubham's real portfolio data below:
 
-Candidate Profile:
-- Name: Shubham Gupta
+Candidate Summary:
+- Full Name: Shubham Gupta
 - Title: Full Stack MERN Developer & Data Analytics Enthusiast
-- Degree: B.Tech in Computer Science & Engineering
+- Education: Bachelor of Technology (B.Tech) in Computer Science & Engineering (CSE)
+- Location: India (Open to Remote, Hybrid, On-site, and Relocation)
 - Email: shubham959gupta@gmail.com / guptashubham20042004@gmail.com
 - LinkedIn: https://www.linkedin.com/in/shubham16gupta/
 - GitHub: https://github.com/Shumbham-Gupta
-- Status: Available for Full-Stack Developer, Frontend/Backend, and Data Analyst roles (Full-time / Remote / Relocation).
+- Status: Available immediately for full-time Full-Stack, Frontend/Backend, and Analytics roles.
 
-Current Work Experience:
-1. Full Stack Developer at LaunchEd Global (May 2026 – Present) [https://launchedglobal.in]:
-   - Leading primary web platform engineering with React 19, Node.js, Express, MongoDB.
-   - Built mentor-led course catalogs, student internship funnels, and counseling workflows.
-   - Integrated Razorpay secure checkout, structured JSON-LD SEO schema, and achieved 99.9% uptime.
-2. Full Stack Intern at JiPanditJi (Jan 2026 – Apr 2026) [https://jipanditji.com/]:
-   - Engineered responsive client interfaces and booking inquiry workflows.
-   - Assisted in REST API endpoint creation and Cashfree payment checkout integration.
+Experience & Career Timeline:
+1. Full Stack Developer at LaunchEd Global (May 2026 – Present) [Current Role]:
+   - Leading primary web engineering for India's overseas education & upskilling platform (launchedglobal.in).
+   - Tech: React 19, Node.js, Express.js, MongoDB, Razorpay, Tailwind CSS.
+   - Built mentor-led course catalogs, internship pipelines, student counseling workflows, and Razorpay checkout.
+2. Full Stack Intern at JiPanditJi (Jan 2026 – Apr 2026):
+   - Built responsive booking portals and client interfaces across India.
+   - Assisted in Express REST API creation and Cashfree checkout integration.
 
-Featured Projects:
-1. TaskInfus — Enterprise EMS (React 19, Node.js, Express, MongoDB, Tailwind CSS v4, JWT Auth):
-   - Multi-tier Role-Based Access Control (RBAC), department workload bar charts across 7 departments, attendance clock-in/out timers, leave approval workflows, and 1-click CSV exports.
-2. AI Expense Intelligence (Python, JavaScript, Gemini AI, Telegram Bot API, Docker):
-   - Real-time expense logging via Telegram bot chat & OCR receipt scanning, Gemini AI predictive spending advisor, and monthly budget alerts.
-3. LaunchEd Global Platform (React, Node, Express, MongoDB, Razorpay):
-   - Production overseas education and upskilling platform.
-4. AI Virtual Assistant (React, Node, Express, MongoDB, Gemini API):
-   - Conversational assistant with natural language understanding and syntax highlighting.
-5. User Authentication System (React, Node, Express, MongoDB, JWT, BCrypt):
-   - Robust authentication flow with salted hashing and protected route guards.
-6. Mock E-Commerce Cart (React, Express, Node, MongoDB, Tailwind CSS):
-   - Real-time cart state management, stock validation, and checkout simulation.
-7. Task Management Web App (React, Express, MongoDB, JWT):
-   - Authenticated task organizer with status workflows and tag filtering.
-8. Electric Vehicle Sales Analysis (Power BI, SQL, Excel):
-   - Power BI dashboard analyzing EV market trends, manufacturer share, and adoption growth with custom DAX KPIs.
-9. Blinkit Sales Dashboard (Power BI, DAX, Power Query, Excel):
-   - Retail sales intelligence report evaluating revenue by item category, fat content, and outlet tier.
+Featured 9 Projects:
+1. TaskInfus — Enterprise EMS (React 19, Node.js, Express, MongoDB, Tailwind CSS v4, JWT): Role-based access control (RBAC), department workload bar charts across 7 departments, shift clock-in/out timers, leave approvals, 1-click CSV exports.
+2. AI Expense Intelligence (Python, JavaScript, Gemini AI, Telegram Bot API, OCR, Docker): Telegram expense parser, receipt OCR scanner, spending velocity charts, and budget overspending alert system.
+3. LaunchEd Global Platform (React, Node, Express, MongoDB, Razorpay): Production overseas education marketplace and counseling portal.
+4. AI Virtual Assistant (React, Node, Express, MongoDB, Gemini API): Conversational AI with coding syntax highlighting.
+5. Secure Authentication Flow (React, Node, Express, MongoDB, JWT, BCrypt): Salting, HTTP-only JWTs, protected route guards.
+6. Mock E-Commerce Store (React, Express, Node, MongoDB, Tailwind): Optimistic cart state, pricing recalculation, checkout flow.
+7. Real-Time Task Manager (React, Express, MongoDB, JWT): Task prioritization, filters, status workflows.
+8. Electric Vehicle Sales Analysis (Power BI, DAX, SQL): Market share analysis, battery adoption trends, geographic drill-downs.
+9. Blinkit Sales Dashboard (Power BI, DAX, Power Query): Retail sales by category, fat content, outlet tier.
 
 Technical Skills:
 - Frontend: React 19, React.js, JavaScript (ES6+), Tailwind CSS, Framer Motion, HTML5, CSS3.
 - Backend: Node.js, Express.js, Python, RESTful APIs, JWT Auth, API Rate Limiting.
-- Databases: MongoDB, PostgreSQL, MySQL, Data Modeling, Mongoose.
-- Analytics & BI: Power BI, DAX, Power Query, Data Modeling, SQL, Advanced Excel.
-- AI & Integrations: Google Gemini AI API, Telegram Bot API, Razorpay Checkout, Cashfree, OCR.
-- DevOps: Git, GitHub, Docker, Postman, Render Deployment.
+- Databases: MongoDB Atlas, SQL, PostgreSQL, Data Modeling, Mongoose.
+- Analytics: Power BI, DAX, Power Query ETL, Advanced Excel.
+- DevOps: Git, GitHub, Docker, Postman, Render, Vercel.
 
-Style Guidelines:
-- Keep answers concise, enthusiastic, professional, and well-structured using markdown formatting (bullet points, bold highlights, headers).
-- Always offer helpful next steps or relevant actions when suitable.
+Formatting Guidelines:
+- Keep answers structured with short bullet points and bold highlights.
+- Be direct, polite, and helpful.
 `;
 
 const knowledgeBase = {
-  greetings: {
-    patterns: ["hi", "hello", "hey", "who are you", "what can you do", "intro", "help"],
+  about_shubham: {
+    patterns: ["who is shubham", "about shubham", "who are you", "who is he", "tell me about shubham", "about yourself", "intro", "introduction", "bio", "profile", "summary"],
     response:
-      "Hello! 👋 I'm **Shubham's AI Portfolio Assistant**.\n\nI can answer questions about his **Full-Stack & AI engineering experience**, deep-dive into his **9 production projects**, breakdown his **tech stack**, or assist you with **hiring details & resume download**.\n\nHow can I help you today?",
+      "### 👨‍💻 About Shubham Gupta\n* **Profile:** Full Stack MERN Developer & Data Analytics Enthusiast.\n* **Education:** B.Tech in Computer Science & Engineering.\n* **Current Role:** Full Stack Developer at **LaunchEd Global**.\n* **Engineering Focus:** High-performance React 19 web applications, secure Node.js/Express APIs, MongoDB architectures, and executive Power BI analytics dashboards.\n* **Status:** Actively available for Full-Stack, Frontend/Backend, and Analytics roles.",
     actions: [
       { label: "View Projects", type: "scroll", target: "projects" },
-      { label: "Career Roadmap", type: "scroll", target: "experience" },
+      { label: "Career Journey", type: "scroll", target: "experience" },
+      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+    ],
+  },
+  fullname: {
+    patterns: ["full name", "name", "what is your name", "what is his name", "shubham full name"],
+    response:
+      "### 👤 Candidate Profile\n* **Full Name:** **Shubham Gupta**\n* **Title:** Full Stack MERN Developer & Data Analytics Enthusiast\n* **Location:** India (Open for Remote, Hybrid & Relocation)",
+    actions: [
+      { label: "View Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+      { label: "Contact Shubham", type: "scroll", target: "contact" },
+    ],
+  },
+  experience_years: {
+    patterns: ["experience", "how many years", "years of experience", "how long", "total experience", "background"],
+    response:
+      "### 💼 Experience Overview\n* **Current Position:** Full Stack Developer at **LaunchEd Global** (May 2026 – Present).\n* **Previous Role:** Full Stack Intern at **JiPanditJi** (Jan 2026 – Apr 2026).\n* **Track Record:** Built and deployed **9+ production applications** spanning enterprise SaaS (TaskInfus EMS), AI & FinTech platforms, and business intelligence analytics.",
+    actions: [
+      { label: "View Career Timeline", type: "scroll", target: "experience" },
+      { label: "Explore Projects", type: "scroll", target: "projects" },
+      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+    ],
+  },
+  pricing_salary: {
+    patterns: ["how much", "rate", "cost", "salary", "compensation", "pricing", "charges", "fees", "budget", "hire cost"],
+    response:
+      "### 💼 Hiring & Compensation\nShubham is open to **full-time employment, contract roles, and collaborative projects**.\n\n* **Employment Type:** Full-Time, Remote, or Relocation.\n* **Compensation:** Open to standard industry compensation aligned with the role scope and responsibilities.\n* **Next Step:** You can discuss terms directly via email or send a message through the contact form.",
+    actions: [
+      { label: "Contact Shubham", type: "scroll", target: "contact" },
+      { label: "Email Directly", type: "link", url: "mailto:shubham959gupta@gmail.com" },
+      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+    ],
+  },
+  education: {
+    patterns: ["education", "college", "degree", "btech", "b.tech", "university", "qualification", "graduate", "study"],
+    response:
+      "### 🎓 Education & Background\n* **Degree:** Bachelor of Technology (**B.Tech**)\n* **Discipline:** **Computer Science & Engineering (CSE)**\n* **Key Subjects:** Data Structures, Algorithms, Database Management Systems, Web Architecture, and Data Analytics.",
+    actions: [
+      { label: "View Roadmap", type: "scroll", target: "experience" },
+      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+    ],
+  },
+  location: {
+    patterns: ["location", "where are you", "where is shubham", "city", "country", "relocate", "relocation", "remote"],
+    response:
+      "### 📍 Location & Availability\n* **Base Location:** **India**\n* **Work Mode:** Open to **Remote**, **Hybrid**, **On-site**, and **Global Relocation** opportunities.",
+    actions: [
+      { label: "Send Message", type: "scroll", target: "contact" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
   },
   launched: {
-    patterns: ["launched", "launched global", "current role", "current company", "work experience", "job"],
+    patterns: ["launched", "launched global", "current role", "current company", "job"],
     response:
       "### 🌐 Full Stack Developer at LaunchEd Global\n* **Period:** May 2026 – Present (Current Role)\n* **Company Platform:** [LaunchEd Global (launchedglobal.in)](https://launchedglobal.in)\n* **Key Contributions:**\n  * Leading primary web platform engineering using React 19, Node.js, Express, and MongoDB.\n  * Architected mentor-led course catalogs, internship pipelines, and student consulting portals.\n  * Integrated Razorpay secure checkout, multi-channel lead funnels, and enterprise JSON-LD SEO schema.\n  * Drove cross-device responsiveness, mobile UX, API rate-limiting, and 99.9% uptime reliability.",
     actions: [
@@ -118,14 +153,14 @@ const knowledgeBase = {
   expense: {
     patterns: ["expense", "expense tracker", "fintech", "ai expense", "telegram bot", "ocr"],
     response:
-      "### 💳 AI Expense Intelligence & Financial Advisor\n* **Tech Stack:** Python (58.1%), JavaScript (17.5%), Google Gemini AI, Telegram Bot API, HTML5/CSS3, Docker\n* **Key Features:**\n  * **Multi-channel Chat Tracking:** Real-time expense parsing from Telegram messages via Gemini AI.\n  * **Receipt OCR Scanner:** Drag-and-drop bill image parser with automatic item & price recognition.\n  * **AI Financial Advisor:** Daily spending velocity charts, overspending alerts, and budget suggestions.\n  * **Proactive Budget Limit Alerts:** Warning triggers at 80% & 100% of monthly budgets.\n  * **Superadmin Access:** PIN-protected multi-user switcher and analytics controls.",
+      "### 💳 AI Expense Intelligence & Financial Advisor\n* **Tech Stack:** Python, JavaScript, Google Gemini AI, Telegram Bot API, HTML5/CSS3, Docker\n* **Key Features:**\n  * **Multi-channel Chat Tracking:** Real-time expense parsing from Telegram messages via Gemini AI.\n  * **Receipt OCR Scanner:** Drag-and-drop bill image parser with automatic item & price recognition.\n  * **AI Financial Advisor:** Daily spending velocity charts, overspending alerts, and budget suggestions.\n  * **Proactive Budget Limit Alerts:** Warning triggers at 80% & 100% of monthly budgets.\n  * **Superadmin Access:** PIN-protected multi-user switcher and analytics controls.",
     actions: [
       { label: "Live Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" },
       { label: "GitHub Repository", type: "link", url: "https://github.com/Shumbham-Gupta/AI_Expense_Tracker" },
     ],
   },
   projects: {
-    patterns: ["projects", "all projects", "portfolio projects", "built", "apps", "what have you built"],
+    patterns: ["projects", "all projects", "portfolio projects", "built", "apps", "what have you built", "work"],
     response:
       "### 📁 Shubham's 9 Featured Projects:\n1. 🏢 **TaskInfus EMS** — Enterprise employee management with RBAC & attendance.\n2. 💳 **AI Expense Intelligence** — Telegram & OCR expense tracking with Gemini AI.\n3. 🌐 **LaunchEd Global Platform** — Production edtech & overseas education platform.\n4. 🤖 **AI Virtual Assistant** — Conversational Gemini AI assistant with MERN stack.\n5. 🔐 **User Authentication System** — JWT auth flow with bcrypt & protected routes.\n6. 🛒 **Mock E-Commerce Cart** — Full-stack mock shopping cart experience.\n7. 📋 **Task Management Web App** — Productivity workspace with JWT auth.\n8. 🚗 **Electric Vehicle Sales Analysis** — Power BI EV market analytics dashboard.\n9. 📊 **Blinkit Sales Dashboard** — Power BI retail sales & category KPI reporting.",
     actions: [
@@ -134,7 +169,7 @@ const knowledgeBase = {
     ],
   },
   skills: {
-    patterns: ["skills", "stack", "tech stack", "technologies", "languages", "python", "react", "node", "mern"],
+    patterns: ["skills", "stack", "tech stack", "technologies", "languages", "python", "react", "node", "mern", "power bi", "sql", "mongo", "database"],
     response:
       "### ⚡ Technical Expertise Matrix:\n* **Frontend:** React 19, React.js, JavaScript (ES6+), Tailwind CSS, Framer Motion, HTML5, CSS3.\n* **Backend & APIs:** Node.js, Express.js, Python, RESTful APIs, JWT Auth, API Rate Limiting.\n* **Databases:** MongoDB, PostgreSQL, MySQL, Data Modeling, Mongoose.\n* **AI & Integrations:** Google Gemini AI API, Telegram Bot API, Razorpay Checkout, Cashfree, OCR.\n* **Analytics & BI:** Power BI, DAX, Power Query, Data Modeling, SQL, Advanced Excel.\n* **DevOps & Tools:** Git, GitHub, Docker, Postman, Render Deployment.",
     actions: [
@@ -143,7 +178,7 @@ const knowledgeBase = {
     ],
   },
   contact: {
-    patterns: ["hire", "contact", "available", "email", "phone", "linkedin", "opportunity", "freelance", "salary", "job offer"],
+    patterns: ["hire", "contact", "available", "email", "phone", "linkedin", "opportunity", "freelance", "reach", "connect", "interview"],
     response:
       "### 📬 Let's Connect & Collaborate!\nShubham is **currently open to Full-Stack Developer, Frontend/Backend, and Data Analytics opportunities**.\n\n* 📧 **Email:** [shubham959gupta@gmail.com](mailto:shubham959gupta@gmail.com)\n* 💼 **LinkedIn:** [linkedin.com/in/shubham16gupta](https://www.linkedin.com/in/shubham16gupta/)\n* 🐙 **GitHub:** [github.com/Shumbham-Gupta](https://github.com/Shumbham-Gupta)\n* 📍 **Location:** India (Open to Remote / Relocation)",
     actions: [
@@ -177,10 +212,12 @@ const getLocalKnowledgeResponse = (userQuery) => {
     let score = 0;
 
     for (const pattern of item.patterns) {
+      if (query.includes(pattern)) {
+        score += pattern.length * 3;
+      }
       const regex = new RegExp(`\\b${escapeRegex(pattern)}\\b`, "i");
       if (regex.test(query)) {
-        // Multi-word patterns get higher weight
-        score += pattern.split(" ").length * 2;
+        score += 10;
       }
     }
 
@@ -190,13 +227,13 @@ const getLocalKnowledgeResponse = (userQuery) => {
     }
   }
 
-  if (bestMatch) {
+  if (bestMatch && highestScore > 0) {
     return bestMatch;
   }
 
+  // Smart contextual default for general queries
   return {
-    response:
-      "I'm here to help you explore Shubham's software engineering background!\n\n* **Current Role:** Full Stack Developer at LaunchEd Global\n* **Core Skills:** React 19, Node.js, Express, MongoDB, Python, Power BI\n* **Key Projects:** TaskInfus EMS, AI Expense Intelligence, LaunchEd Global\n* **Status:** Open to Full-Stack and Analytics opportunities!",
+    response: `### 🤖 Shubham Gupta Portfolio Assistant\n\nI can answer questions regarding:\n* **Who is Shubham:** Full Stack MERN Developer at LaunchEd Global\n* **Years of Experience:** Full Stack Engineer at LaunchEd Global & Intern at JiPanditJi\n* **Tech Stack:** React 19, Node.js, Express, MongoDB, Python, Power BI\n* **Featured Work:** TaskInfus EMS, AI Expense Intelligence, LaunchEd Global\n* **Hiring Status:** Open for Full-Time, Remote & Relocation roles\n\nFeel free to ask specific questions like *"Tell me about TaskInfus"*, *"What is his experience at LaunchEd?"*, or *"Download resume"*.`,
     actions: [
       { label: "View Projects", type: "scroll", target: "projects" },
       { label: "Tech Stack", type: "scroll", target: "skills" },
@@ -207,91 +244,86 @@ const getLocalKnowledgeResponse = (userQuery) => {
 
 // Live Google Gemini API with conversational memory & hybrid fallback
 const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
-  const apiKey =
+  const rawKey =
     import.meta.env.VITE_GEMINI_API_KEY ||
     "AIzaSyAUV-FHG0wnUUjxVrAY944NuT5RPHjHjF8";
+  const apiKey = typeof rawKey === "string" ? rawKey.trim() : "";
 
   if (!apiKey) {
     return getLocalKnowledgeResponse(userQuery);
   }
 
-  try {
-    // Format conversation history for Gemini multi-turn chat
-    const historyContents = conversationHistory
-      .filter((msg) => msg.text && msg.id !== 1)
-      .slice(-6)
-      .map((msg) => ({
-        role: msg.sender === "user" ? "user" : "model",
-        parts: [{ text: msg.text }],
-      }));
+  // Model fallback cascade: try fast 1.5-flash, then 2.0-flash, then 1.5-pro
+  const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
 
-    const contents = [
-      ...historyContents,
-      {
-        role: "user",
-        parts: [{ text: userQuery }],
-      },
-    ];
+  for (const model of models) {
+    try {
+      const promptWithContext = `System Instructions: You are Shubham Gupta's official AI Portfolio Assistant. Answer clearly, accurately, and politely in markdown bullet points based on Shubham's candidate profile below.\n\n${PORTFOLIO_CONTEXT}\n\nUser Question: ${userQuery}`;
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: PORTFOLIO_CONTEXT }],
-          },
-          contents,
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 600,
-          },
-        }),
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: promptWithContext }],
+              },
+            ],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 600,
+            },
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        continue;
       }
-    );
 
-    if (!res.ok) {
-      throw new Error(`Gemini API returned status ${res.status}`);
-    }
+      const data = await res.json();
+      const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    const data = await res.json();
-    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!candidateText) {
+        continue;
+      }
 
-    if (!candidateText) {
-      throw new Error("No candidate text in response");
-    }
+      // Dynamic contextual actions based on AI output
+      const dynamicActions = [];
+      const lowerText = (candidateText + " " + userQuery).toLowerCase();
 
-    // Dynamic contextual actions based on AI output
-    const dynamicActions = [];
-    const lowerText = (candidateText + " " + userQuery).toLowerCase();
+      if (lowerText.includes("launched")) {
+        dynamicActions.push({ label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" });
+      }
+      if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
+        dynamicActions.push({ label: "TaskInfus Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
+      }
+      if (lowerText.includes("expense") || lowerText.includes("telegram")) {
+        dynamicActions.push({ label: "AI Expense Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
+      }
+      if (lowerText.includes("project") || lowerText.includes("built") || dynamicActions.length === 0) {
+        dynamicActions.push({ label: "View Projects", type: "scroll", target: "projects" });
+      }
+      if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("contact")) {
+        dynamicActions.push({ label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" });
+        dynamicActions.push({ label: "Contact Shubham", type: "scroll", target: "contact" });
+      }
 
-    if (lowerText.includes("launched")) {
-      dynamicActions.push({ label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" });
+      return {
+        response: candidateText,
+        actions: dynamicActions.slice(0, 3),
+        isLiveGemini: true,
+      };
+    } catch (err) {
+      console.warn(`Gemini API error on ${model}:`, err);
     }
-    if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
-      dynamicActions.push({ label: "TaskInfus Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
-    }
-    if (lowerText.includes("expense") || lowerText.includes("telegram")) {
-      dynamicActions.push({ label: "AI Expense Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
-    }
-    if (lowerText.includes("project") || lowerText.includes("built") || dynamicActions.length === 0) {
-      dynamicActions.push({ label: "View Projects", type: "scroll", target: "projects" });
-    }
-    if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("contact")) {
-      dynamicActions.push({ label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" });
-      dynamicActions.push({ label: "Contact Shubham", type: "scroll", target: "contact" });
-    }
-
-    return {
-      response: candidateText,
-      actions: dynamicActions.slice(0, 3),
-      isLiveGemini: true,
-    };
-  } catch (err) {
-    console.warn("Gemini API error, falling back to local NLP engine:", err);
-    return getLocalKnowledgeResponse(userQuery);
   }
+
+  // If all live models fail/offline, use local semantic engine
+  return getLocalKnowledgeResponse(userQuery);
 };
 
 const renderFormattedText = (text, isDarkMode) => {
@@ -405,132 +437,114 @@ const AIAssistantWidget = ({ isDark = false }) => {
     if (isOpen) {
       scrollToBottom();
     }
-  }, [messages, isOpen, isTyping, streamingMessageId]);
+  }, [messages, isOpen]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (widgetRef.current && !widgetRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [isOpen]);
-
-  // Streaming typewriter animation engine
-  const streamResponseText = (fullText, actions, messageId) => {
-    const words = fullText.split(" ");
-    let currentWordIndex = 0;
-    let accumulatedText = "";
-
-    setStreamingMessageId(messageId);
-
-    const interval = setInterval(() => {
-      if (currentWordIndex < words.length) {
-        accumulatedText += (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex];
-        currentWordIndex++;
-
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === messageId ? { ...msg, text: accumulatedText } : msg
-          )
-        );
-      } else {
-        clearInterval(interval);
-        setStreamingMessageId(null);
-        setIsTyping(false);
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === messageId ? { ...msg, text: fullText, actions } : msg
-          )
-        );
-      }
-    }, 22);
-  };
-
-  const handleSendMessage = async (textToSend) => {
-    const query = textToSend || inputQuery;
-    if (!query.trim() || isTyping) return;
-
-    const userMessage = {
-      id: Date.now(),
-      sender: "user",
-      text: query,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInputQuery("");
-    setIsTyping(true);
-
-    const newAiMessageId = Date.now() + 1;
-
-    // Create placeholder for AI message
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: newAiMessageId,
-        sender: "ai",
-        text: "",
-        actions: [],
-      },
-    ]);
-
-    // Fetch response from Gemini / Hybrid local engine with conversational memory
-    const aiResult = await fetchGeminiResponse(query, messages);
-    streamResponseText(aiResult.response, aiResult.actions || [], newAiMessageId);
-  };
-
+  // Handle action buttons
   const handleActionClick = (action) => {
     if (action.query) {
       handleSendMessage(action.query);
       return;
     }
 
-    if (action.type === "scroll" || action.type === "navigate") {
-      const targetMap = {
-        home: "/",
-        about: "/about",
-        skills: "/skills",
-        projects: "/projects",
-        certifications: "/certifications",
-        experience: "/experience",
-        contact: "/contact",
-      };
-      const path = targetMap[action.target] || `/${action.target}`;
-      navigate(path);
-      if (window.innerWidth < 768) {
-        setIsOpen(false);
+    if (action.type === "link" && action.url) {
+      window.open(action.url, "_blank");
+    } else if (action.type === "download" && action.url) {
+      const link = document.createElement("a");
+      link.href = action.url;
+      link.download = "Shubham_Gupta_Resume.pdf";
+      link.click();
+    } else if (action.type === "scroll" && action.target) {
+      setIsOpen(false);
+      navigate(`/${action.target === "home" ? "" : action.target}`);
+      setTimeout(() => {
+        const el = document.getElementById(action.target);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+    }
+  };
+
+  const handleSendMessage = async (textToSend = null) => {
+    const query = (textToSend || inputQuery).trim();
+    if (!query || isTyping) return;
+
+    setInputQuery("");
+
+    // 1. Add User Message
+    const userMsgId = Date.now();
+    const newMessages = [
+      ...messages,
+      { id: userMsgId, sender: "user", text: query },
+    ];
+    setMessages(newMessages);
+    setIsTyping(true);
+
+    // 2. Add AI Placeholder Message for streaming
+    const aiMsgId = Date.now() + 1;
+    setMessages((prev) => [
+      ...prev,
+      { id: aiMsgId, sender: "ai", text: "", actions: [] },
+    ]);
+    setStreamingMessageId(aiMsgId);
+
+    try {
+      const { response, actions } = await fetchGeminiResponse(query, newMessages);
+
+      // Simulate streaming typewriter effect for ultra realistic AI response
+      const words = response.split(" ");
+      let accumulatedText = "";
+
+      for (let i = 0; i < words.length; i++) {
+        accumulatedText += (i === 0 ? "" : " ") + words[i];
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMsgId ? { ...msg, text: accumulatedText } : msg
+          )
+        );
+        // Fast streaming interval
+        await new Promise((resolve) => setTimeout(resolve, 16));
       }
-    } else if (action.type === "link") {
-      window.open(action.url, "_blank", "noreferrer");
-    } else if (action.type === "download") {
-      const a = document.createElement("a");
-      a.href = action.url;
-      a.download = "Shubham_Gupta_Resume.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+
+      // Attach actions after response finishes
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === aiMsgId ? { ...msg, actions: actions || [] } : msg
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === aiMsgId
+            ? {
+                ...msg,
+                text: "I encountered a minor network issue. Please ask again or reach out directly to Shubham at shubham959gupta@gmail.com!",
+                actions: [
+                  { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+                  { label: "Contact Shubham", type: "scroll", target: "contact" },
+                ],
+              }
+            : msg
+        )
+      );
+    } finally {
+      setIsTyping(false);
+      setStreamingMessageId(null);
     }
   };
 
   const clearChat = () => {
     setMessages([
       {
-        id: Date.now(),
+        id: 1,
         sender: "ai",
-        text: "Chat cleared! How else can I assist you with Shubham's portfolio?",
+        text: "Hi there! 👋 I'm **Shubham's AI Assistant**.\n\nAsk me anything about his **experience at LaunchEd Global**, **9+ production projects**, **skills**, or **hiring availability**!",
         actions: [
           { label: "🚀 Role at LaunchEd", query: "What is Shubham's role at LaunchEd Global?" },
           { label: "⚡ Core Tech Stack", query: "What is Shubham's core tech stack and skills?" },
-          { label: "📁 All 9 Projects", query: "List all of Shubham's featured projects" },
+          { label: "🏢 TaskInfus EMS", query: "Tell me about TaskInfus Enterprise EMS project" },
+          { label: "💳 AI Expense Tracker", query: "Explain the AI Expense Intelligence project" },
         ],
       },
     ]);
