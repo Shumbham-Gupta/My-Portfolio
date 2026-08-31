@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -8,7 +8,37 @@ import {
   FaDownload,
   FaExternalLinkAlt,
   FaTrashAlt,
+  FaCopy,
+  FaCheck,
+  FaMicrophone,
+  FaMicrophoneSlash,
 } from "react-icons/fa";
+
+const CHAT_STORAGE_KEY = "shubham_ai_portfolio_chat_v2";
+
+const initialWelcomeMessage = {
+  id: 1,
+  sender: "ai",
+  text: "Hi there! 👋 I'm **Shubham's AI Assistant**.\n\nAsk me anything about his **experience at LaunchEd Global**, **9+ production projects**, **skills**, or **hiring availability**!",
+  actions: [
+    { label: "🚀 Role at LaunchEd", query: "What is Shubham's role at LaunchEd Global?" },
+    { label: "⚡ Core Tech Stack", query: "What is Shubham's core tech stack and skills?" },
+    { label: "🏢 TaskInfus EMS", query: "Tell me about TaskInfus Enterprise EMS project" },
+    { label: "💳 AI Expense Tracker", query: "Explain the AI Expense Intelligence project" },
+  ],
+  followUps: [
+    "Tell me about TaskInfus EMS",
+    "What is his tech stack?",
+    "Is he available for full-time hire?",
+  ],
+};
+
+const personaShortcuts = [
+  { label: "👔 Recruiter Summary", query: "Give me an executive recruiter summary of Shubham Gupta" },
+  { label: "💻 Tech Deep-Dive", query: "What is Shubham's core tech stack and backend architecture skills?" },
+  { label: "🚀 LaunchEd Role", query: "What is Shubham's role and impact at LaunchEd Global?" },
+  { label: "📄 Resume Download", query: "How can I download Shubham's resume?" },
+];
 
 const sampleQuestions = [
   { label: "🚀 Role at LaunchEd Global", query: "What is Shubham's role at LaunchEd Global?" },
@@ -67,7 +97,7 @@ Formatting Guidelines:
 
 const knowledgeBase = {
   about_shubham: {
-    patterns: ["who is shubham", "about shubham", "who are you", "who is he", "tell me about shubham", "about yourself", "intro", "introduction", "bio", "profile", "summary"],
+    patterns: ["who is shubham", "about shubham", "who are you", "who is he", "tell me about shubham", "about yourself", "intro", "introduction", "bio", "profile", "summary", "recruiter summary"],
     response:
       "### 👨‍💻 About Shubham Gupta\n* **Profile:** Full Stack MERN Developer & Data Analytics Enthusiast.\n* **Education:** B.Tech in Computer Science & Engineering.\n* **Current Role:** Full Stack Developer at **LaunchEd Global**.\n* **Engineering Focus:** High-performance React 19 web applications, secure Node.js/Express APIs, MongoDB architectures, and executive Power BI analytics dashboards.\n* **Status:** Actively available for Full-Stack, Frontend/Backend, and Analytics roles.",
     actions: [
@@ -75,6 +105,7 @@ const knowledgeBase = {
       { label: "Career Journey", type: "scroll", target: "experience" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["Tell me about TaskInfus EMS", "What is his tech stack?", "How can I contact him?"],
   },
   fullname: {
     patterns: ["full name", "name", "what is your name", "what is his name", "shubham full name"],
@@ -84,6 +115,7 @@ const knowledgeBase = {
       { label: "View Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
       { label: "Contact Shubham", type: "scroll", target: "contact" },
     ],
+    followUps: ["What is his current job?", "List his top projects"],
   },
   experience_years: {
     patterns: ["experience", "how many years", "years of experience", "how long", "total experience", "background"],
@@ -94,6 +126,7 @@ const knowledgeBase = {
       { label: "Explore Projects", type: "scroll", target: "projects" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["What did he do at LaunchEd Global?", "What is his tech stack?"],
   },
   pricing_salary: {
     patterns: ["how much", "rate", "cost", "salary", "compensation", "pricing", "charges", "fees", "budget", "hire cost"],
@@ -104,6 +137,7 @@ const knowledgeBase = {
       { label: "Email Directly", type: "link", url: "mailto:shubham959gupta@gmail.com" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["Is he available for immediate joining?", "Download official resume"],
   },
   education: {
     patterns: ["education", "college", "degree", "btech", "b.tech", "university", "qualification", "graduate", "study"],
@@ -113,6 +147,7 @@ const knowledgeBase = {
       { label: "View Roadmap", type: "scroll", target: "experience" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["What are his core technical skills?", "Show his featured projects"],
   },
   location: {
     patterns: ["location", "where are you", "where is shubham", "city", "country", "relocate", "relocation", "remote"],
@@ -122,6 +157,7 @@ const knowledgeBase = {
       { label: "Send Message", type: "scroll", target: "contact" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["How can I contact Shubham?", "Is he open to full-time hiring?"],
   },
   launched: {
     patterns: ["launched", "launched global", "current role", "current company", "job"],
@@ -131,6 +167,7 @@ const knowledgeBase = {
       { label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" },
       { label: "View Career Roadmap", type: "scroll", target: "experience" },
     ],
+    followUps: ["What tech stack was used at LaunchEd?", "Tell me about TaskInfus EMS"],
   },
   jipanditji: {
     patterns: ["jipanditji", "internship", "intern", "previous role", "past experience"],
@@ -140,6 +177,7 @@ const knowledgeBase = {
       { label: "Visit JiPanditJi", type: "link", url: "https://jipanditji.com/" },
       { label: "View Career Roadmap", type: "scroll", target: "experience" },
     ],
+    followUps: ["What is his role at LaunchEd Global?", "Show all 9 projects"],
   },
   taskinfus: {
     patterns: ["taskinfus", "ems", "employee management", "employee management system"],
@@ -149,6 +187,7 @@ const knowledgeBase = {
       { label: "Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" },
       { label: "GitHub Repository", type: "link", url: "https://github.com/Shumbham-Gupta/Employee_Management_System" },
     ],
+    followUps: ["Explain the AI Expense Tracker", "List all 9 projects"],
   },
   expense: {
     patterns: ["expense", "expense tracker", "fintech", "ai expense", "telegram bot", "ocr"],
@@ -158,6 +197,7 @@ const knowledgeBase = {
       { label: "Live Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" },
       { label: "GitHub Repository", type: "link", url: "https://github.com/Shumbham-Gupta/AI_Expense_Tracker" },
     ],
+    followUps: ["Tell me about TaskInfus EMS", "Download resume"],
   },
   projects: {
     patterns: ["projects", "all projects", "portfolio projects", "built", "apps", "what have you built", "work"],
@@ -167,6 +207,7 @@ const knowledgeBase = {
       { label: "Scroll to Projects", type: "scroll", target: "projects" },
       { label: "View GitHub Profile", type: "link", url: "https://github.com/Shumbham-Gupta" },
     ],
+    followUps: ["Tell me about TaskInfus EMS", "Tell me about AI Expense Tracker", "What is his tech stack?"],
   },
   skills: {
     patterns: ["skills", "stack", "tech stack", "technologies", "languages", "python", "react", "node", "mern", "power bi", "sql", "mongo", "database"],
@@ -176,6 +217,7 @@ const knowledgeBase = {
       { label: "Explore Skills Section", type: "scroll", target: "skills" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["Show projects using React 19", "Is Shubham available for hire?"],
   },
   contact: {
     patterns: ["hire", "contact", "available", "email", "phone", "linkedin", "opportunity", "freelance", "reach", "connect", "interview"],
@@ -186,6 +228,7 @@ const knowledgeBase = {
       { label: "Open LinkedIn", type: "link", url: "https://www.linkedin.com/in/shubham16gupta/" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
+    followUps: ["Download official resume", "View his featured projects"],
   },
   resume: {
     patterns: ["resume", "cv", "download resume", "download cv", "pdf"],
@@ -195,6 +238,7 @@ const knowledgeBase = {
       { label: "📥 Download Resume (PDF)", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
       { label: "View Contact Details", type: "scroll", target: "contact" },
     ],
+    followUps: ["Tell me about his role at LaunchEd Global", "What are his top skills?"],
   },
 };
 
@@ -233,11 +277,16 @@ const getLocalKnowledgeResponse = (userQuery) => {
 
   // Smart contextual default for general queries
   return {
-    response: `### 🤖 Shubham Gupta Portfolio Assistant\n\nI can answer questions regarding:\n* **Who is Shubham:** Full Stack MERN Developer at LaunchEd Global\n* **Years of Experience:** Full Stack Engineer at LaunchEd Global & Intern at JiPanditJi\n* **Tech Stack:** React 19, Node.js, Express, MongoDB, Python, Power BI\n* **Featured Work:** TaskInfus EMS, AI Expense Intelligence, LaunchEd Global\n* **Hiring Status:** Open for Full-Time, Remote & Relocation roles\n\nFeel free to ask specific questions like *"Tell me about TaskInfus"*, *"What is his experience at LaunchEd?"*, or *"Download resume"*.`,
+    response: `### 🤖 Shubham Gupta Portfolio Assistant\n\nI can answer questions regarding:\n* **Who is Shubham:** Full Stack MERN Developer at LaunchEd Global\n* **Years of Experience:** Full Stack Engineer at LaunchEd Global & Intern at JiPanditJi\n* **Tech Stack:** React 19, Node.js, Express, MongoDB, Python, Power BI\n* **Featured Work:** TaskInfus EMS, AI Expense Intelligence, LaunchEd Global\n* **Hiring Status:** Open for Full-Time, Remote & Relocation roles\n\nFeel free to click any suggestion below!`,
     actions: [
       { label: "View Projects", type: "scroll", target: "projects" },
       { label: "Tech Stack", type: "scroll", target: "skills" },
       { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+    ],
+    followUps: [
+      "Tell me about TaskInfus EMS",
+      "What is his role at LaunchEd Global?",
+      "Download official resume",
     ],
   };
 };
@@ -293,28 +342,35 @@ const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
 
       // Dynamic contextual actions based on AI output
       const dynamicActions = [];
+      const dynamicFollowUps = [];
       const lowerText = (candidateText + " " + userQuery).toLowerCase();
 
       if (lowerText.includes("launched")) {
         dynamicActions.push({ label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" });
+        dynamicFollowUps.push("What tech stack does LaunchEd use?", "Tell me about TaskInfus EMS");
       }
       if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
         dynamicActions.push({ label: "TaskInfus Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
+        dynamicFollowUps.push("Tell me about AI Expense Tracker", "What are his core skills?");
       }
       if (lowerText.includes("expense") || lowerText.includes("telegram")) {
         dynamicActions.push({ label: "AI Expense Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
+        dynamicFollowUps.push("Tell me about TaskInfus EMS", "Download resume");
       }
       if (lowerText.includes("project") || lowerText.includes("built") || dynamicActions.length === 0) {
         dynamicActions.push({ label: "View Projects", type: "scroll", target: "projects" });
+        dynamicFollowUps.push("Tell me about TaskInfus EMS", "What is his tech stack?");
       }
       if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("contact")) {
         dynamicActions.push({ label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" });
         dynamicActions.push({ label: "Contact Shubham", type: "scroll", target: "contact" });
+        dynamicFollowUps.push("What is his role at LaunchEd Global?", "List his top projects");
       }
 
       return {
         response: candidateText,
         actions: dynamicActions.slice(0, 3),
+        followUps: dynamicFollowUps.slice(0, 2),
         isLiveGemini: true,
       };
     } catch (err) {
@@ -410,24 +466,73 @@ const AINexusLogo = ({ className = "w-5 h-5" }) => (
 const AIAssistantWidget = ({ isDark = false }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "ai",
-      text: "Hi there! 👋 I'm **Shubham's AI Assistant**.\n\nAsk me anything about his **experience at LaunchEd Global**, **9+ production projects**, **skills**, or **hiring availability**!",
-      actions: [
-        { label: "🚀 Role at LaunchEd", query: "What is Shubham's role at LaunchEd Global?" },
-        { label: "⚡ Core Tech Stack", query: "What is Shubham's core tech stack and skills?" },
-        { label: "🏢 TaskInfus EMS", query: "Tell me about TaskInfus Enterprise EMS project" },
-        { label: "💳 AI Expense Tracker", query: "Explain the AI Expense Intelligence project" },
-      ],
-    },
-  ]);
+  const [copiedMsgId, setCopiedMsgId] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  // 1. Persistent chat memory across page navigation
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // Fallback
+    }
+    return [initialWelcomeMessage];
+  });
+
   const [inputQuery, setInputQuery] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [streamingMessageId, setStreamingMessageId] = useState(null);
   const messagesEndRef = useRef(null);
   const widgetRef = useRef(null);
+
+  // Sync messages to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    } catch {
+      // ignore
+    }
+  }, [messages]);
+
+  // 2. Speech-to-Text Voice Recognition Setup
+  useEffect(() => {
+    if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInputQuery(transcript);
+          handleSendMessage(transcript);
+        }
+        setIsListening(false);
+      };
+
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) return;
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -438,6 +543,14 @@ const AIAssistantWidget = ({ isDark = false }) => {
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  // 3. 1-Click Copy Answer Handler
+  const handleCopy = (msgId, text) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setCopiedMsgId(msgId);
+    setTimeout(() => setCopiedMsgId(null), 2000);
+  };
 
   // Handle action buttons
   const handleActionClick = (action) => {
@@ -484,12 +597,12 @@ const AIAssistantWidget = ({ isDark = false }) => {
     const aiMsgId = Date.now() + 1;
     setMessages((prev) => [
       ...prev,
-      { id: aiMsgId, sender: "ai", text: "", actions: [] },
+      { id: aiMsgId, sender: "ai", text: "", actions: [], followUps: [] },
     ]);
     setStreamingMessageId(aiMsgId);
 
     try {
-      const { response, actions } = await fetchGeminiResponse(query, newMessages);
+      const { response, actions, followUps } = await fetchGeminiResponse(query, newMessages);
 
       // Simulate streaming typewriter effect for ultra realistic AI response
       const words = response.split(" ");
@@ -502,14 +615,13 @@ const AIAssistantWidget = ({ isDark = false }) => {
             msg.id === aiMsgId ? { ...msg, text: accumulatedText } : msg
           )
         );
-        // Fast streaming interval
-        await new Promise((resolve) => setTimeout(resolve, 16));
+        await new Promise((resolve) => setTimeout(resolve, 14));
       }
 
-      // Attach actions after response finishes
+      // Attach actions and smart follow-up suggestions
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === aiMsgId ? { ...msg, actions: actions || [] } : msg
+          msg.id === aiMsgId ? { ...msg, actions: actions || [], followUps: followUps || [] } : msg
         )
       );
     } catch (err) {
@@ -524,6 +636,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
                   { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
                   { label: "Contact Shubham", type: "scroll", target: "contact" },
                 ],
+                followUps: ["Tell me about his role at LaunchEd Global", "Show his projects"],
               }
             : msg
         )
@@ -535,19 +648,8 @@ const AIAssistantWidget = ({ isDark = false }) => {
   };
 
   const clearChat = () => {
-    setMessages([
-      {
-        id: 1,
-        sender: "ai",
-        text: "Hi there! 👋 I'm **Shubham's AI Assistant**.\n\nAsk me anything about his **experience at LaunchEd Global**, **9+ production projects**, **skills**, or **hiring availability**!",
-        actions: [
-          { label: "🚀 Role at LaunchEd", query: "What is Shubham's role at LaunchEd Global?" },
-          { label: "⚡ Core Tech Stack", query: "What is Shubham's core tech stack and skills?" },
-          { label: "🏢 TaskInfus EMS", query: "Tell me about TaskInfus Enterprise EMS project" },
-          { label: "💳 AI Expense Tracker", query: "Explain the AI Expense Intelligence project" },
-        ],
-      },
-    ]);
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+    setMessages([initialWelcomeMessage]);
   };
 
   return (
@@ -619,7 +721,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 25, scale: 0.95 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className={`fixed bottom-4 left-2.5 right-2.5 z-50 mx-auto flex flex-col h-[74vh] max-h-[580px] w-auto max-w-[420px] overflow-hidden rounded-2xl sm:rounded-3xl border backdrop-blur-2xl sm:bottom-28 sm:right-7 sm:left-auto sm:w-[420px] sm:h-auto sm:max-h-[85vh] ${
+              className={`fixed bottom-4 left-2.5 right-2.5 z-50 mx-auto flex flex-col h-[74vh] max-h-[600px] w-auto max-w-[440px] overflow-hidden rounded-2xl sm:rounded-3xl border backdrop-blur-2xl sm:bottom-28 sm:right-7 sm:left-auto sm:w-[440px] sm:h-auto sm:max-h-[85vh] ${
                 isDark
                   ? "border-cyan-400/40 bg-slate-950/95 text-slate-100 shadow-[0_10px_50px_rgba(0,0,0,0.85),0_0_40px_rgba(34,211,238,0.3)]"
                   : "border-purple-200/80 bg-white text-slate-800 shadow-[0_20px_60px_rgba(30,41,59,0.22)] ring-1 ring-purple-100"
@@ -683,19 +785,42 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 </div>
               </div>
 
+              {/* Fast-Track Persona Filter Bar */}
+              <div
+                className={`border-b px-3 py-1.5 overflow-x-auto no-scrollbar flex items-center gap-1.5 shrink-0 ${
+                  isDark ? "border-slate-800/80 bg-slate-900/40" : "border-purple-100/70 bg-purple-50/20"
+                }`}
+              >
+                {personaShortcuts.map((ps, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSendMessage(ps.query)}
+                    disabled={isTyping}
+                    type="button"
+                    className={`shrink-0 rounded-lg border px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold transition-all hover:scale-105 disabled:opacity-50 ${
+                      isDark
+                        ? "border-cyan-500/20 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
+                        : "border-purple-200 bg-white text-purple-700 hover:bg-purple-50 hover:border-purple-400 shadow-xs"
+                    }`}
+                  >
+                    {ps.label}
+                  </button>
+                ))}
+              </div>
+
               {/* Message Thread (Flexible Auto-Sizing on Mobile) */}
               <div
-                className={`flex-1 min-h-0 sm:h-[340px] overflow-y-auto p-3 sm:p-4 space-y-2.5 sm:space-y-3.5 text-xs ${
+                className={`flex-1 min-h-0 sm:h-[350px] overflow-y-auto p-3 sm:p-4 space-y-3 text-xs ${
                   isDark ? "bg-slate-950/60" : "bg-slate-50/70"
                 }`}
               >
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
+                    className={`group/msg flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
                   >
                     <div
-                      className={`max-w-[90%] sm:max-w-[88%] rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 shadow-xs leading-relaxed text-[11px] sm:text-xs ${
+                      className={`relative max-w-[92%] sm:max-w-[88%] rounded-xl sm:rounded-2xl p-3 sm:p-3.5 shadow-xs leading-relaxed text-[11px] sm:text-xs ${
                         msg.sender === "user"
                           ? "bg-linear-to-r from-purple-600 to-cyan-600 text-white rounded-br-none shadow-[0_4px_15px_rgba(139,92,246,0.3)]"
                           : isDark
@@ -703,6 +828,23 @@ const AIAssistantWidget = ({ isDark = false }) => {
                           : "bg-white text-slate-800 border border-purple-100/90 rounded-tl-none shadow-xs"
                       }`}
                     >
+                      {/* Copy Answer Button on AI Responses */}
+                      {msg.sender === "ai" && msg.text && (
+                        <button
+                          onClick={() => handleCopy(msg.id, msg.text)}
+                          title="Copy response to clipboard"
+                          className={`absolute top-2 right-2 rounded-md p-1 opacity-0 group-hover/msg:opacity-100 transition-opacity ${
+                            isDark ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-800" : "text-slate-400 hover:text-purple-600 hover:bg-purple-50"
+                          }`}
+                        >
+                          {copiedMsgId === msg.id ? (
+                            <FaCheck className="text-[10px] text-emerald-400" />
+                          ) : (
+                            <FaCopy className="text-[10px]" />
+                          )}
+                        </button>
+                      )}
+
                       {msg.sender === "ai" && !msg.text && streamingMessageId === msg.id ? (
                         <div className="flex items-center gap-1.5 py-1">
                           <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-cyan-400 animate-bounce"></span>
@@ -721,7 +863,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
 
                     {/* Interactive Action Pills */}
                     {msg.actions && msg.actions.length > 0 && streamingMessageId !== msg.id && (
-                      <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-1 sm:gap-1.5 max-w-[95%]">
+                      <div className="mt-1.5 flex flex-wrap gap-1 sm:gap-1.5 max-w-[95%]">
                         {msg.actions.map((act, idx) => (
                           <button
                             key={idx}
@@ -730,7 +872,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
                             className={`inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-[11px] font-semibold transition-all duration-200 hover:scale-105 ${
                               isDark
                                 ? "border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
-                                : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400"
+                                : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400 shadow-xs"
                             }`}
                           >
                             {act.type === "link" && <FaExternalLinkAlt className="text-[8px] sm:text-[9px]" />}
@@ -741,12 +883,39 @@ const AIAssistantWidget = ({ isDark = false }) => {
                         ))}
                       </div>
                     )}
+
+                    {/* Smart Follow-Up Suggestions attached to this response */}
+                    {msg.followUps && msg.followUps.length > 0 && streamingMessageId !== msg.id && (
+                      <div className="mt-2 flex flex-col gap-1 w-full pl-1">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-cyan-500/80">
+                          Suggested follow-up:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {msg.followUps.map((fu, fuIdx) => (
+                            <button
+                              key={fuIdx}
+                              onClick={() => handleSendMessage(fu)}
+                              disabled={isTyping}
+                              type="button"
+                              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition-all hover:scale-102 ${
+                                isDark
+                                  ? "border-slate-800 bg-slate-900/90 text-slate-300 hover:border-cyan-400 hover:text-cyan-300"
+                                  : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 shadow-xs"
+                              }`}
+                            >
+                              <span>{fu}</span>
+                              <FaArrowRight className="text-[7px] opacity-70" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Quick Suggestion Chips */}
+              {/* Bottom Preset Suggestions */}
               <div
                 className={`border-t px-2.5 py-1.5 sm:px-3 sm:py-2 overflow-x-auto no-scrollbar flex gap-1 sm:gap-1.5 shrink-0 ${
                   isDark ? "border-slate-800 bg-slate-900/60" : "border-purple-100 bg-purple-50/40"
@@ -761,7 +930,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
                     className={`shrink-0 rounded-full border px-2 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] font-medium transition-colors ${
                       isDark
                         ? "border-slate-800 bg-slate-900 text-slate-300 hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
-                        : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 disabled:opacity-50"
+                        : "border-purple-200 bg-white text-slate-700 hover:border-purple-400 hover:text-purple-700 disabled:opacity-50 shadow-xs"
                     }`}
                   >
                     {q.label}
@@ -769,7 +938,7 @@ const AIAssistantWidget = ({ isDark = false }) => {
                 ))}
               </div>
 
-              {/* Input Form */}
+              {/* Input Form with Voice Input */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -779,11 +948,29 @@ const AIAssistantWidget = ({ isDark = false }) => {
                   isDark ? "border-slate-800 bg-slate-950" : "border-purple-100 bg-white"
                 }`}
               >
+                {/* Voice Input Button */}
+                {typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) && (
+                  <button
+                    type="button"
+                    onClick={toggleVoiceInput}
+                    title={isListening ? "Listening... click to stop" : "Speak question"}
+                    className={`flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl border transition-all ${
+                      isListening
+                        ? "bg-red-500/20 border-red-500 text-red-400 animate-pulse scale-105"
+                        : isDark
+                        ? "border-slate-800 bg-slate-900 text-slate-400 hover:text-cyan-400 hover:border-cyan-400"
+                        : "border-purple-200 bg-purple-50 text-purple-600 hover:bg-purple-100 hover:border-purple-400 shadow-xs"
+                    }`}
+                  >
+                    {isListening ? <FaMicrophone className="text-xs text-red-500 animate-bounce" /> : <FaMicrophone className="text-xs" />}
+                  </button>
+                )}
+
                 <input
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
-                  placeholder={isTyping ? "Thinking..." : "Ask Shubham's AI..."}
+                  placeholder={isListening ? "Listening to your voice..." : isTyping ? "Thinking..." : "Ask Shubham's AI..."}
                   disabled={isTyping}
                   className={`flex-1 rounded-xl border px-3 py-2 text-xs font-medium transition-all focus:outline-none focus:ring-2 disabled:opacity-50 ${
                     isDark
