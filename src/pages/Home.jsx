@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
+import CoreCapabilitiesBento from "../components/CoreCapabilitiesBento";
 import TechMarquee from "../components/TechMarquee";
 import FeaturedProjectsCarousel from "../components/FeaturedProjectsCarousel";
 import {
@@ -33,7 +34,7 @@ const recruiterShortcuts = [
 
 const Home = ({ onOpenResume }) => {
   return (
-    <div className="space-y-8 sm:space-y-16 md:space-y-20 pb-16">
+    <div className="space-y-10 sm:space-y-16 md:space-y-20 pb-16">
       {/* Hero Section */}
       <Hero onOpenResume={onOpenResume} />
 
@@ -105,8 +106,11 @@ const Home = ({ onOpenResume }) => {
       {/* 3. Modern Interactive 9-Project Carousel Section */}
       <FeaturedProjectsCarousel />
 
-      {/* 4. Modern Infinite Tech Stack Marquee */}
+      {/* 4. Modern Infinite Tech Stack Marquee (Technical Arsenal • Always Moving Forward) */}
       <TechMarquee />
+
+      {/* 5. Core Capabilities Bento Grid */}
+      <CoreCapabilitiesBento />
 
       {/* 5. Quick Category Navigation Cards Grid */}
       <section className="relative px-4 sm:px-6 mx-auto max-w-7xl">
