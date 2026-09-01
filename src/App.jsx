@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AIAssistantWidget from "./components/AIAssistantWidget";
 import ResumeModal from "./components/ResumeModal";
+import ProjectModal from "./components/ProjectModal";
 import CommandPalette from "./components/CommandPalette";
 
 // Pages
@@ -47,6 +48,7 @@ function App() {
 
   const isDark = theme === "dark";
   const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const location = useLocation();
 
@@ -155,12 +157,23 @@ function App() {
         </main>
 
         <Footer />
-        <AIAssistantWidget isDark={isDark} />
+        <AIAssistantWidget
+          isDark={isDark}
+          onOpenResume={() => setIsResumeOpen(true)}
+          onOpenProject={(proj) => setSelectedProject(proj)}
+        />
 
         <ResumeModal
           isOpen={isResumeOpen}
           onClose={() => setIsResumeOpen(false)}
         />
+
+        {selectedProject && (
+          <ProjectModal
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
+        )}
 
         <CommandPalette
           isOpen={isCommandPaletteOpen}

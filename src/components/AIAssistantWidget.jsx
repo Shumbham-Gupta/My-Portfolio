@@ -12,7 +12,14 @@ import {
   FaCheck,
   FaMicrophone,
   FaMicrophoneSlash,
+  FaBookOpen,
+  FaFilePdf,
+  FaVolumeUp,
+  FaVolumeMute,
 } from "react-icons/fa";
+import { projects } from "./Projects";
+import ProjectModal from "./ProjectModal";
+import ResumeModal from "./ResumeModal";
 
 const CHAT_STORAGE_KEY = "shubham_ai_portfolio_chat_v2";
 
@@ -34,10 +41,10 @@ const initialWelcomeMessage = {
 };
 
 const personaShortcuts = [
-  { label: "👔 Recruiter Summary", query: "Give me an executive recruiter summary of Shubham Gupta" },
+  { label: "👔 Recruiter Snapshot", query: "Give me an executive recruiter snapshot of Shubham Gupta", isPrimary: true },
   { label: "💻 Tech Deep-Dive", query: "What is Shubham's core tech stack and backend architecture skills?" },
   { label: "🚀 LaunchEd Role", query: "What is Shubham's role and impact at LaunchEd Global?" },
-  { label: "📄 Resume Download", query: "How can I download Shubham's resume?" },
+  { label: "📄 Preview Resume", query: "How can I preview or download Shubham's resume?" },
 ];
 
 const sampleQuestions = [
@@ -95,15 +102,54 @@ Formatting Guidelines:
 - Be direct, polite, and helpful.
 `;
 
+const findProject = (queryOrKey) => {
+  if (!queryOrKey || !Array.isArray(projects)) return null;
+  const q = String(queryOrKey).toLowerCase().trim();
+
+  if (q.includes("taskinfus") || q.includes("ems") || q.includes("employee")) {
+    return projects.find((p) => p.title.toLowerCase().includes("taskinfus")) || projects[0];
+  }
+  if (q.includes("expense") || q.includes("fintech") || q.includes("telegram") || q.includes("ocr")) {
+    return projects.find((p) => p.title.toLowerCase().includes("expense")) || projects[1];
+  }
+  if (q.includes("launched") || q.includes("launchedglobal")) {
+    return projects.find((p) => p.title.toLowerCase().includes("launched")) || projects[2];
+  }
+  if (q.includes("assistant") || q.includes("virtual")) {
+    return projects.find((p) => p.title.toLowerCase().includes("virtual")) || projects[3];
+  }
+  if (q.includes("auth") || q.includes("user auth") || q.includes("jwt")) {
+    return projects.find((p) => p.title.toLowerCase().includes("authentication")) || projects[4];
+  }
+  if (q.includes("ecommerce") || q.includes("cart") || q.includes("store")) {
+    return projects.find((p) => p.title.toLowerCase().includes("cart")) || projects[5];
+  }
+  if (q.includes("task manager") || q.includes("task management")) {
+    return projects.find((p) => p.title.toLowerCase().includes("task management")) || projects[6];
+  }
+  if (q.includes("ev") || q.includes("electric vehicle") || q.includes("vehicle")) {
+    return projects.find((p) => p.title.toLowerCase().includes("electric vehicle")) || projects[7];
+  }
+  if (q.includes("blinkit")) {
+    return projects.find((p) => p.title.toLowerCase().includes("blinkit")) || projects[8];
+  }
+
+  return (
+    projects.find((p) => p.title.toLowerCase() === q) ||
+    projects.find((p) => p.title.toLowerCase().includes(q)) ||
+    null
+  );
+};
+
 const knowledgeBase = {
   about_shubham: {
     patterns: ["who is shubham", "about shubham", "who are you", "who is he", "tell me about shubham", "about yourself", "intro", "introduction", "bio", "profile", "summary", "recruiter summary"],
     response:
       "### 👨‍💻 About Shubham Gupta\n* **Profile:** Full Stack MERN Developer & Data Analytics Enthusiast.\n* **Education:** B.Tech in Computer Science & Engineering.\n* **Current Role:** Full Stack Developer at **LaunchEd Global**.\n* **Engineering Focus:** High-performance React 19 web applications, secure Node.js/Express APIs, MongoDB architectures, and executive Power BI analytics dashboards.\n* **Status:** Actively available for Full-Stack, Frontend/Backend, and Analytics roles.",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "View Projects", type: "scroll", target: "projects" },
       { label: "Career Journey", type: "scroll", target: "experience" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["Tell me about TaskInfus EMS", "What is his tech stack?", "How can I contact him?"],
   },
@@ -112,7 +158,7 @@ const knowledgeBase = {
     response:
       "### 👤 Candidate Profile\n* **Full Name:** **Shubham Gupta**\n* **Title:** Full Stack MERN Developer & Data Analytics Enthusiast\n* **Location:** India (Open for Remote, Hybrid & Relocation)",
     actions: [
-      { label: "View Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "Contact Shubham", type: "scroll", target: "contact" },
     ],
     followUps: ["What is his current job?", "List his top projects"],
@@ -123,8 +169,8 @@ const knowledgeBase = {
       "### 💼 Experience Overview\n* **Current Position:** Full Stack Developer at **LaunchEd Global** (May 2026 – Present).\n* **Previous Role:** Full Stack Intern at **JiPanditJi** (Jan 2026 – Apr 2026).\n* **Track Record:** Built and deployed **9+ production applications** spanning enterprise SaaS (TaskInfus EMS), AI & FinTech platforms, and business intelligence analytics.",
     actions: [
       { label: "View Career Timeline", type: "scroll", target: "experience" },
-      { label: "Explore Projects", type: "scroll", target: "projects" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+      { label: "🏢 TaskInfus Case Study", type: "project_modal", projectKey: "taskinfus" },
+      { label: "📄 Preview Resume", type: "resume_modal" },
     ],
     followUps: ["What did he do at LaunchEd Global?", "What is his tech stack?"],
   },
@@ -133,9 +179,9 @@ const knowledgeBase = {
     response:
       "### 💼 Hiring & Compensation\nShubham is open to **full-time employment, contract roles, and collaborative projects**.\n\n* **Employment Type:** Full-Time, Remote, or Relocation.\n* **Compensation:** Open to standard industry compensation aligned with the role scope and responsibilities.\n* **Next Step:** You can discuss terms directly via email or send a message through the contact form.",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "Contact Shubham", type: "scroll", target: "contact" },
       { label: "Email Directly", type: "link", url: "mailto:shubham959gupta@gmail.com" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["Is he available for immediate joining?", "Download official resume"],
   },
@@ -144,8 +190,8 @@ const knowledgeBase = {
     response:
       "### 🎓 Education & Background\n* **Degree:** Bachelor of Technology (**B.Tech**)\n* **Discipline:** **Computer Science & Engineering (CSE)**\n* **Key Subjects:** Data Structures, Algorithms, Database Management Systems, Web Architecture, and Data Analytics.",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "View Roadmap", type: "scroll", target: "experience" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["What are his core technical skills?", "Show his featured projects"],
   },
@@ -154,8 +200,8 @@ const knowledgeBase = {
     response:
       "### 📍 Location & Availability\n* **Base Location:** **India**\n* **Work Mode:** Open to **Remote**, **Hybrid**, **On-site**, and **Global Relocation** opportunities.",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "Send Message", type: "scroll", target: "contact" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["How can I contact Shubham?", "Is he open to full-time hiring?"],
   },
@@ -164,6 +210,7 @@ const knowledgeBase = {
     response:
       "### 🌐 Full Stack Developer at LaunchEd Global\n* **Period:** May 2026 – Present (Current Role)\n* **Company Platform:** [LaunchEd Global (launchedglobal.in)](https://launchedglobal.in)\n* **Key Contributions:**\n  * Leading primary web platform engineering using React 19, Node.js, Express, and MongoDB.\n  * Architected mentor-led course catalogs, internship pipelines, and student consulting portals.\n  * Integrated Razorpay secure checkout, multi-channel lead funnels, and enterprise JSON-LD SEO schema.\n  * Drove cross-device responsiveness, mobile UX, API rate-limiting, and 99.9% uptime reliability.",
     actions: [
+      { label: "🔍 View Case Study", type: "project_modal", projectKey: "launched" },
       { label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" },
       { label: "View Career Roadmap", type: "scroll", target: "experience" },
     ],
@@ -179,11 +226,36 @@ const knowledgeBase = {
     ],
     followUps: ["What is his role at LaunchEd Global?", "Show all 9 projects"],
   },
+  recruiter: {
+    patterns: [
+      "recruiter",
+      "recruiter summary",
+      "recruiter snapshot",
+      "snapshot",
+      "executive summary",
+      "candidate summary",
+      "candidate overview",
+      "hiring overview",
+      "why hire",
+      "tldr",
+      "quick summary",
+      "overview of shubham",
+    ],
+    response:
+      "### 👔 Executive Candidate Snapshot\n* **Candidate:** **Shubham Gupta** | Full Stack MERN Developer & Data Analytics Specialist\n* **Current Impact:** Lead Full Stack Developer at **LaunchEd Global** (Engineered production marketplace, React 19, Node.js, Express, MongoDB, Razorpay, 99.9% uptime)\n* **Primary Stack:** `React 19`, `Node.js`, `Express.js`, `MongoDB`, `Python`, `SQL`, `Power BI`, `Tailwind CSS`\n* **Flagship Projects:**\n  * 🏢 `TaskInfus EMS` — Enterprise employee management with RBAC, attendance tracking, and 7-department analytics.\n  * 💳 `AI Expense Intelligence` — Automated expense tracking via Telegram bot & OCR receipt scanner.\n* **Availability & Work Status:** **Immediate Joiner** | Open to **Full-time**, **Remote**, **Hybrid**, and **Relocation**\n* **Verified Credentials:** 5-Star Gold Badges on HackerRank (SQL & Python), Meta Front-End Specialization.",
+    actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
+      { label: "🏢 TaskInfus Case Study", type: "project_modal", projectKey: "taskinfus" },
+      { label: "✉️ Contact Shubham", type: "scroll", target: "contact" },
+    ],
+    followUps: ["Tell me about his role at LaunchEd Global", "What are his core backend skills?", "Show all 9 featured projects"],
+  },
   taskinfus: {
     patterns: ["taskinfus", "ems", "employee management", "employee management system"],
     response:
       "### 🏢 TaskInfus — Enterprise Employee Management System (MERN Stack)\n* **Tech Stack:** React 19, Node.js, Express.js, MongoDB, Tailwind CSS v4, JWT\n* **Core Capabilities:**\n  * Role-Based Access Control (RBAC) with `verifyToken` & `verifyAdmin`.\n  * Executive analytics dashboard with department workload bar graphs across 7 departments.\n  * Interactive employee attendance with daily clock-in/out and automatic hours calculation.\n  * Leave approval workflows (Pending/Approved/Rejected) and 1-click CSV data exports.\n  * API rate limiting and light/dark theme system.",
     actions: [
+      { label: "🔍 View Case Study", type: "project_modal", projectKey: "taskinfus" },
       { label: "Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" },
       { label: "GitHub Repository", type: "link", url: "https://github.com/Shumbham-Gupta/Employee_Management_System" },
     ],
@@ -194,6 +266,7 @@ const knowledgeBase = {
     response:
       "### 💳 AI Expense Intelligence & Financial Advisor\n* **Tech Stack:** Python, JavaScript, Google Gemini AI, Telegram Bot API, HTML5/CSS3, Docker\n* **Key Features:**\n  * **Multi-channel Chat Tracking:** Real-time expense parsing from Telegram messages via Gemini AI.\n  * **Receipt OCR Scanner:** Drag-and-drop bill image parser with automatic item & price recognition.\n  * **AI Financial Advisor:** Daily spending velocity charts, overspending alerts, and budget suggestions.\n  * **Proactive Budget Limit Alerts:** Warning triggers at 80% & 100% of monthly budgets.\n  * **Superadmin Access:** PIN-protected multi-user switcher and analytics controls.",
     actions: [
+      { label: "🔍 View Case Study", type: "project_modal", projectKey: "expense" },
       { label: "Live Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" },
       { label: "GitHub Repository", type: "link", url: "https://github.com/Shumbham-Gupta/AI_Expense_Tracker" },
     ],
@@ -204,8 +277,9 @@ const knowledgeBase = {
     response:
       "### 📁 Shubham's 9 Featured Projects:\n1. 🏢 **TaskInfus EMS** — Enterprise employee management with RBAC & attendance.\n2. 💳 **AI Expense Intelligence** — Telegram & OCR expense tracking with Gemini AI.\n3. 🌐 **LaunchEd Global Platform** — Production edtech & overseas education platform.\n4. 🤖 **AI Virtual Assistant** — Conversational Gemini AI assistant with MERN stack.\n5. 🔐 **User Authentication System** — JWT auth flow with bcrypt & protected routes.\n6. 🛒 **Mock E-Commerce Cart** — Full-stack mock shopping cart experience.\n7. 📋 **Task Management Web App** — Productivity workspace with JWT auth.\n8. 🚗 **Electric Vehicle Sales Analysis** — Power BI EV market analytics dashboard.\n9. 📊 **Blinkit Sales Dashboard** — Power BI retail sales & category KPI reporting.",
     actions: [
-      { label: "Scroll to Projects", type: "scroll", target: "projects" },
-      { label: "View GitHub Profile", type: "link", url: "https://github.com/Shumbham-Gupta" },
+      { label: "🏢 TaskInfus Case Study", type: "project_modal", projectKey: "taskinfus" },
+      { label: "💳 AI Expense Case Study", type: "project_modal", projectKey: "expense" },
+      { label: "Explore All Projects", type: "scroll", target: "projects" },
     ],
     followUps: ["Tell me about TaskInfus EMS", "Tell me about AI Expense Tracker", "What is his tech stack?"],
   },
@@ -214,8 +288,8 @@ const knowledgeBase = {
     response:
       "### ⚡ Technical Expertise Matrix:\n* **Frontend:** React 19, React.js, JavaScript (ES6+), Tailwind CSS, Framer Motion, HTML5, CSS3.\n* **Backend & APIs:** Node.js, Express.js, Python, RESTful APIs, JWT Auth, API Rate Limiting.\n* **Databases:** MongoDB, PostgreSQL, MySQL, Data Modeling, Mongoose.\n* **AI & Integrations:** Google Gemini AI API, Telegram Bot API, Razorpay Checkout, Cashfree, OCR.\n* **Analytics & BI:** Power BI, DAX, Power Query, Data Modeling, SQL, Advanced Excel.\n* **DevOps & Tools:** Git, GitHub, Docker, Postman, Render Deployment.",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "Explore Skills Section", type: "scroll", target: "skills" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["Show projects using React 19", "Is Shubham available for hire?"],
   },
@@ -224,18 +298,19 @@ const knowledgeBase = {
     response:
       "### 📬 Let's Connect & Collaborate!\nShubham is **currently open to Full-Stack Developer, Frontend/Backend, and Data Analytics opportunities**.\n\n* 📧 **Email:** [shubham959gupta@gmail.com](mailto:shubham959gupta@gmail.com)\n* 💼 **LinkedIn:** [linkedin.com/in/shubham16gupta](https://www.linkedin.com/in/shubham16gupta/)\n* 🐙 **GitHub:** [github.com/Shumbham-Gupta](https://github.com/Shumbham-Gupta)\n* 📍 **Location:** India (Open to Remote / Relocation)",
     actions: [
+      { label: "📄 Preview Resume", type: "resume_modal" },
       { label: "Send Message", type: "scroll", target: "contact" },
       { label: "Open LinkedIn", type: "link", url: "https://www.linkedin.com/in/shubham16gupta/" },
-      { label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
     ],
     followUps: ["Download official resume", "View his featured projects"],
   },
   resume: {
     patterns: ["resume", "cv", "download resume", "download cv", "pdf"],
     response:
-      "### 📄 Shubham's Resume\nYou can download the latest official copy of Shubham Gupta's resume right here.",
+      "### 📄 Shubham's Resume\nYou can preview Shubham Gupta's official resume directly in the interactive viewer or download a PDF copy.",
     actions: [
-      { label: "📥 Download Resume (PDF)", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
+      { label: "📄 Preview Resume", type: "resume_modal" },
+      { label: "📥 Download PDF", type: "download", url: "/Shubham_Gupta_Resume.pdf" },
       { label: "View Contact Details", type: "scroll", target: "contact" },
     ],
     followUps: ["Tell me about his role at LaunchEd Global", "What are his top skills?"],
@@ -291,7 +366,59 @@ const getLocalKnowledgeResponse = (userQuery) => {
   };
 };
 
-// Live Google Gemini API with conversational memory & hybrid fallback
+// Format conversation history for Gemini API multi-turn chat
+const buildMultiTurnContents = (userQuery, conversationHistory = []) => {
+  const systemPrompt = `System Instructions: You are Shubham Gupta's official AI Portfolio Assistant. Answer clearly, accurately, enthusiastically, and politely in structured markdown bullet points with bold highlights based on Shubham's candidate profile below.\n\n${PORTFOLIO_CONTEXT}`;
+
+  // Filter messages to get valid history (exclude initial welcome message id: 1)
+  const validHistory = (Array.isArray(conversationHistory) ? conversationHistory : [])
+    .filter((m) => m && typeof m.text === "string" && m.text.trim().length > 0 && m.id !== 1)
+    .slice(-8); // Keep last 8 turns (4 user + 4 AI responses) for token-efficient memory
+
+  const contents = [];
+
+  for (let i = 0; i < validHistory.length; i++) {
+    const item = validHistory[i];
+    const role = item.sender === "user" ? "user" : "model";
+    const text = item.text.trim();
+
+    // Prevent consecutive identical roles in Gemini payload
+    if (contents.length > 0 && contents[contents.length - 1].role === role) {
+      contents[contents.length - 1].parts[0].text += `\n\n${text}`;
+    } else {
+      contents.push({
+        role,
+        parts: [{ text }],
+      });
+    }
+  }
+
+  // Ensure conversation ends with the current user query as the last user turn
+  if (contents.length === 0 || contents[contents.length - 1].role !== "user") {
+    contents.push({
+      role: "user",
+      parts: [{ text: userQuery }],
+    });
+  } else {
+    contents[contents.length - 1].parts[0].text = userQuery;
+  }
+
+  // Ensure history starts with role "user"
+  while (contents.length > 0 && contents[0].role !== "user") {
+    contents.shift();
+  }
+
+  if (contents.length === 0) {
+    contents.push({
+      role: "user",
+      parts: [{ text: userQuery }],
+    });
+  }
+
+  return { systemPrompt, contents };
+};
+
+// Live Google Gemini API with conversational multi-turn memory & hybrid fallback
 const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
   const rawKey =
     import.meta.env.VITE_GEMINI_API_KEY ||
@@ -302,25 +429,24 @@ const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
     return getLocalKnowledgeResponse(userQuery);
   }
 
+  const { systemPrompt, contents } = buildMultiTurnContents(userQuery, conversationHistory);
+
   // Model fallback cascade: try fast 1.5-flash, then 2.0-flash, then 1.5-pro
   const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
 
   for (const model of models) {
     try {
-      const promptWithContext = `System Instructions: You are Shubham Gupta's official AI Portfolio Assistant. Answer clearly, accurately, and politely in markdown bullet points based on Shubham's candidate profile below.\n\n${PORTFOLIO_CONTEXT}\n\nUser Question: ${userQuery}`;
-
-      const res = await fetch(
+      // 1. Standard Gemini multi-turn request with system_instruction
+      let res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: promptWithContext }],
-              },
-            ],
+            system_instruction: {
+              parts: [{ text: systemPrompt }],
+            },
+            contents,
             generationConfig: {
               temperature: 0.7,
               maxOutputTokens: 600,
@@ -328,6 +454,32 @@ const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
           }),
         }
       );
+
+      // 2. Fallback if system_instruction is not accepted by older proxy endpoints
+      if (!res.ok && res.status === 400 && contents.length > 0) {
+        const fallbackContents = [
+          {
+            role: "user",
+            parts: [{ text: `${systemPrompt}\n\nUser Question:\n${contents[0].parts[0].text}` }],
+          },
+          ...contents.slice(1),
+        ];
+
+        res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: fallbackContents,
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 600,
+              },
+            }),
+          }
+        );
+      }
 
       if (!res.ok) {
         continue;
@@ -345,26 +497,47 @@ const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
       const dynamicFollowUps = [];
       const lowerText = (candidateText + " " + userQuery).toLowerCase();
 
-      if (lowerText.includes("launched")) {
-        dynamicActions.push({ label: "Visit LaunchEd Global", type: "link", url: "https://launchedglobal.in" });
-        dynamicFollowUps.push("What tech stack does LaunchEd use?", "Tell me about TaskInfus EMS");
-      }
-      if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
-        dynamicActions.push({ label: "TaskInfus Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
+      if (lowerText.includes("recruiter") || lowerText.includes("snapshot") || lowerText.includes("executive summary")) {
+        dynamicActions.push({ label: "📄 Preview Resume", type: "resume_modal" });
+        dynamicActions.push({ label: "🏢 TaskInfus Case Study", type: "project_modal", projectKey: "taskinfus" });
+        dynamicActions.push({ label: "✉️ Contact Shubham", type: "scroll", target: "contact" });
+        dynamicFollowUps.push("What is his role at LaunchEd Global?", "What are his core backend skills?", "Show all 9 featured projects");
+      } else if (lowerText.includes("taskinfus") || lowerText.includes("employee management")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "taskinfus" });
+        dynamicActions.push({ label: "Live Demo", type: "link", url: "https://employee-management-system-frontend-5opl.onrender.com/login" });
         dynamicFollowUps.push("Tell me about AI Expense Tracker", "What are his core skills?");
-      }
-      if (lowerText.includes("expense") || lowerText.includes("telegram")) {
-        dynamicActions.push({ label: "AI Expense Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
+      } else if (lowerText.includes("expense") || lowerText.includes("telegram")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "expense" });
+        dynamicActions.push({ label: "Live Demo", type: "link", url: "https://ai-expense-tracker-968h.onrender.com/" });
         dynamicFollowUps.push("Tell me about TaskInfus EMS", "Download resume");
+      } else if (lowerText.includes("launched")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "launched" });
+        dynamicActions.push({ label: "Visit LaunchEd", type: "link", url: "https://launchedglobal.in" });
+        dynamicFollowUps.push("What tech stack does LaunchEd use?", "Tell me about TaskInfus EMS");
+      } else if (lowerText.includes("virtual assistant") || lowerText.includes("assistant")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "assistant" });
+      } else if (lowerText.includes("authentication") || lowerText.includes("auth")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "auth" });
+      } else if (lowerText.includes("ecommerce") || lowerText.includes("cart")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "ecommerce" });
+      } else if (lowerText.includes("task manager")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "taskmanager" });
+      } else if (lowerText.includes("ev") || lowerText.includes("electric vehicle")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "ev" });
+      } else if (lowerText.includes("blinkit")) {
+        dynamicActions.push({ label: "🔍 View Case Study", type: "project_modal", projectKey: "blinkit" });
       }
-      if (lowerText.includes("project") || lowerText.includes("built") || dynamicActions.length === 0) {
-        dynamicActions.push({ label: "View Projects", type: "scroll", target: "projects" });
-        dynamicFollowUps.push("Tell me about TaskInfus EMS", "What is his tech stack?");
-      }
-      if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("contact")) {
-        dynamicActions.push({ label: "Download Resume", type: "download", url: "/Shubham_Gupta_Resume.pdf" });
+
+      if (lowerText.includes("resume") || lowerText.includes("cv") || lowerText.includes("hire") || lowerText.includes("profile")) {
+        dynamicActions.push({ label: "📄 Preview Resume", type: "resume_modal" });
         dynamicActions.push({ label: "Contact Shubham", type: "scroll", target: "contact" });
         dynamicFollowUps.push("What is his role at LaunchEd Global?", "List his top projects");
+      }
+
+      if (dynamicActions.length === 0) {
+        dynamicActions.push({ label: "🏢 TaskInfus Case Study", type: "project_modal", projectKey: "taskinfus" });
+        dynamicActions.push({ label: "📄 Preview Resume", type: "resume_modal" });
+        dynamicFollowUps.push("Tell me about TaskInfus EMS", "What is his tech stack?");
       }
 
       return {
@@ -382,39 +555,172 @@ const fetchGeminiResponse = async (userQuery, conversationHistory = []) => {
   return getLocalKnowledgeResponse(userQuery);
 };
 
+// Tokenizer for rich inline elements: links, code pills, and bold text
+const parseInlineTokens = (text, isDarkMode, lineKey) => {
+  if (!text) return text;
+
+  // Match markdown links [label](url), inline code `code`, and bold **text**
+  const tokenRegex = /(\[[^\]]+\]\([^)]+\)|`[^`]+`|\*\*[^*]+\*\*)/g;
+  const parts = text.split(tokenRegex);
+
+  return parts.map((part, idx) => {
+    if (!part) return null;
+    const key = `${lineKey}-${idx}`;
+
+    // 1. Markdown link: [label](url)
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (linkMatch) {
+      const [, label, url] = linkMatch;
+      return (
+        <a
+          key={key}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-flex items-center gap-0.5 font-semibold underline underline-offset-2 transition-colors ${
+            isDarkMode
+              ? "text-cyan-400 hover:text-cyan-300 decoration-cyan-400/40"
+              : "text-purple-700 hover:text-purple-900 decoration-purple-400/50"
+          }`}
+        >
+          {label}
+        </a>
+      );
+    }
+
+    // 2. Inline code / tech tag badge: `code`
+    if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
+      const codeContent = part.slice(1, -1);
+      return (
+        <code
+          key={key}
+          className={`inline-block px-1.5 py-0.5 mx-0.5 rounded-md font-mono text-[10px] sm:text-[11px] font-semibold border transition-all ${
+            isDarkMode
+              ? "bg-cyan-950/60 border-cyan-400/35 text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.15)]"
+              : "bg-purple-50 border-purple-200 text-purple-800 shadow-2xs"
+          }`}
+        >
+          {codeContent}
+        </code>
+      );
+    }
+
+    // 3. Bold text: **bold**
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      const boldContent = part.slice(2, -2);
+      return (
+        <strong
+          key={key}
+          className={`font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}
+        >
+          {boldContent}
+        </strong>
+      );
+    }
+
+    return part;
+  });
+};
+
 const renderFormattedText = (text, isDarkMode) => {
+  if (!text) return null;
+
   return text.split("\n").map((line, lineIdx) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      return <div key={lineIdx} className="h-1.5" />;
+    }
+
+    // Heading level 3: ### Heading
     if (line.startsWith("### ")) {
+      const headingText = line.replace("### ", "").trim();
       return (
-        <p key={lineIdx} className={`font-bold mb-1.5 text-sm ${isDarkMode ? "text-cyan-400" : "text-purple-700"}`}>
-          {line.replace("### ", "")}
+        <p
+          key={lineIdx}
+          className={`font-bold mt-1.5 mb-1 text-xs sm:text-sm tracking-wide ${
+            isDarkMode ? "text-cyan-400" : "text-purple-700"
+          }`}
+        >
+          {parseInlineTokens(headingText, isDarkMode, `h3-${lineIdx}`)}
         </p>
       );
     }
 
-    const parts = line.split(/(\*\*.*?\*\*)/g);
-    const formattedLine = parts.map((part, partIdx) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return (
-          <strong key={partIdx} className={`font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      return part;
-    });
+    // Heading level 2 or 1: ## or #
+    if (line.startsWith("## ") || line.startsWith("# ")) {
+      const headingText = line.replace(/^#+\s+/, "").trim();
+      return (
+        <p
+          key={lineIdx}
+          className={`font-extrabold mt-1.5 mb-1 text-xs sm:text-sm tracking-wide ${
+            isDarkMode ? "text-cyan-300" : "text-purple-800"
+          }`}
+        >
+          {parseInlineTokens(headingText, isDarkMode, `h-${lineIdx}`)}
+        </p>
+      );
+    }
 
+    // Numbered list item: 1. , 2. etc.
+    const numberedMatch = line.match(/^(\d+)\.\s+(.*)$/);
+    if (numberedMatch) {
+      const [, num, itemContent] = numberedMatch;
+      return (
+        <div
+          key={lineIdx}
+          className={`flex items-start gap-1.5 my-1 leading-relaxed ${
+            isDarkMode ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
+          <span
+            className={`inline-flex items-center justify-center h-4 w-4 shrink-0 rounded-full text-[9px] font-bold mt-0.5 border ${
+              isDarkMode
+                ? "bg-cyan-500/15 border-cyan-400/30 text-cyan-300"
+                : "bg-purple-100 border-purple-300 text-purple-700"
+            }`}
+          >
+            {num}
+          </span>
+          <div className="flex-1">
+            {parseInlineTokens(itemContent, isDarkMode, `num-${lineIdx}`)}
+          </div>
+        </div>
+      );
+    }
+
+    // Bullet point: * or -
     if (line.startsWith("* ") || line.startsWith("- ")) {
+      const bulletContent = line.slice(2);
       return (
-        <p key={lineIdx} className={`ml-2 my-0.5 leading-relaxed ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
-          • {formattedLine}
-        </p>
+        <div
+          key={lineIdx}
+          className={`flex items-start gap-1.5 ml-1 my-0.5 leading-relaxed ${
+            isDarkMode ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
+          <span
+            className={`font-bold mt-[-1px] select-none ${
+              isDarkMode ? "text-cyan-400" : "text-purple-600"
+            }`}
+          >
+            &bull;
+          </span>
+          <div className="flex-1">
+            {parseInlineTokens(bulletContent, isDarkMode, `bullet-${lineIdx}`)}
+          </div>
+        </div>
       );
     }
 
+    // Standard body line
     return (
-      <p key={lineIdx} className={`my-0.5 leading-relaxed ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-        {formattedLine}
+      <p
+        key={lineIdx}
+        className={`my-0.5 leading-relaxed ${
+          isDarkMode ? "text-slate-200" : "text-slate-800"
+        }`}
+      >
+        {parseInlineTokens(line, isDarkMode, `p-${lineIdx}`)}
       </p>
     );
   });
@@ -463,10 +769,27 @@ const AINexusLogo = ({ className = "w-5 h-5" }) => (
   </svg>
 );
 
-const AIAssistantWidget = ({ isDark = false }) => {
+// Clean markdown formatting for natural voice text-to-speech
+const cleanTextForSpeech = (rawText) => {
+  if (!rawText) return "";
+  return rawText
+    .replace(/###\s+/g, "") // remove heading markdown
+    .replace(/\*\*(.*?)\*\*/g, "$1") // remove bold asterisks
+    .replace(/\*(.*?)\*/g, "$1") // remove italic asterisks
+    .replace(/`([^`]+)`/g, "$1") // remove inline code backticks
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // replace [label](url) with label text
+    .replace(/•|\*|-/g, "") // remove bullet markers
+    .replace(/\s+/g, " ") // collapse excess spaces
+    .trim();
+};
+
+const AIAssistantWidget = ({ isDark = false, onOpenResume, onOpenProject }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [localSelectedProject, setLocalSelectedProject] = useState(null);
+  const [localIsResumeOpen, setLocalIsResumeOpen] = useState(false);
   const [copiedMsgId, setCopiedMsgId] = useState(null);
+  const [speakingMsgId, setSpeakingMsgId] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef(null);
 
@@ -544,6 +867,39 @@ const AIAssistantWidget = ({ isDark = false }) => {
     }
   }, [messages, isOpen]);
 
+  // Close chat widget when clicking outside or pressing Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
+  // Stop ongoing speech when widget closes or unmounts
+  useEffect(() => {
+    if (!isOpen && typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingMsgId(null);
+    }
+  }, [isOpen]);
+
   // 3. 1-Click Copy Answer Handler
   const handleCopy = (msgId, text) => {
     if (!text) return;
@@ -552,10 +908,70 @@ const AIAssistantWidget = ({ isDark = false }) => {
     setTimeout(() => setCopiedMsgId(null), 2000);
   };
 
+  // 4. Voice Output / Text-to-Speech (Read Aloud) Handler
+  const handleSpeak = (msgId, text) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+    // Toggle off if clicking the currently speaking message
+    if (speakingMsgId === msgId) {
+      window.speechSynthesis.cancel();
+      setSpeakingMsgId(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const speechText = cleanTextForSpeech(text);
+    if (!speechText) return;
+
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    utterance.rate = 1.03;
+    utterance.pitch = 1.0;
+    utterance.lang = "en-US";
+
+    // Attempt to select a smooth natural voice if available in browser
+    const voices = window.speechSynthesis.getVoices();
+    const naturalVoice =
+      voices.find((v) => v.lang.startsWith("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Jenny") || v.name.includes("David"))) ||
+      voices.find((v) => v.lang.startsWith("en"));
+
+    if (naturalVoice) {
+      utterance.voice = naturalVoice;
+    }
+
+    utterance.onend = () => setSpeakingMsgId(null);
+    utterance.onerror = () => setSpeakingMsgId(null);
+
+    setSpeakingMsgId(msgId);
+    window.speechSynthesis.speak(utterance);
+  };
+
   // Handle action buttons
   const handleActionClick = (action) => {
     if (action.query) {
       handleSendMessage(action.query);
+      return;
+    }
+
+    if (action.type === "resume_modal") {
+      setIsOpen(false);
+      if (onOpenResume) {
+        onOpenResume();
+      } else {
+        setLocalIsResumeOpen(true);
+      }
+      return;
+    }
+
+    if (action.type === "project_modal") {
+      const proj = findProject(action.projectKey || action.projectTitle || action.label);
+      if (proj) {
+        setIsOpen(false);
+        if (onOpenProject) {
+          onOpenProject(proj);
+        } else {
+          setLocalSelectedProject(proj);
+        }
+      }
       return;
     }
 
@@ -581,6 +997,11 @@ const AIAssistantWidget = ({ isDark = false }) => {
   const handleSendMessage = async (textToSend = null) => {
     const query = (textToSend || inputQuery).trim();
     if (!query || isTyping) return;
+
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingMsgId(null);
+    }
 
     setInputQuery("");
 
@@ -648,6 +1069,10 @@ const AIAssistantWidget = ({ isDark = false }) => {
   };
 
   const clearChat = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingMsgId(null);
+    }
     localStorage.removeItem(CHAT_STORAGE_KEY);
     setMessages([initialWelcomeMessage]);
   };
@@ -797,8 +1222,12 @@ const AIAssistantWidget = ({ isDark = false }) => {
                     onClick={() => handleSendMessage(ps.query)}
                     disabled={isTyping}
                     type="button"
-                    className={`shrink-0 rounded-lg border px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold transition-all hover:scale-105 disabled:opacity-50 ${
-                      isDark
+                    className={`shrink-0 rounded-lg border px-2.5 py-1 text-[9px] sm:text-[10px] font-semibold transition-all duration-200 hover:scale-105 disabled:opacity-50 ${
+                      ps.isPrimary
+                        ? isDark
+                          ? "border-cyan-400/60 bg-linear-to-r from-purple-600/30 via-cyan-500/25 to-cyan-400/20 text-cyan-200 shadow-[0_0_12px_rgba(34,211,238,0.25)] hover:border-cyan-300 font-bold"
+                          : "border-purple-400 bg-linear-to-r from-purple-100 to-indigo-100 text-purple-900 shadow-xs hover:border-purple-500 font-bold"
+                        : isDark
                         ? "border-cyan-500/20 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-400"
                         : "border-purple-200 bg-white text-purple-700 hover:bg-purple-50 hover:border-purple-400 shadow-xs"
                     }`}
@@ -828,21 +1257,44 @@ const AIAssistantWidget = ({ isDark = false }) => {
                           : "bg-white text-slate-800 border border-purple-100/90 rounded-tl-none shadow-xs"
                       }`}
                     >
-                      {/* Copy Answer Button on AI Responses */}
+                      {/* Message Action Controls: Read Aloud & Copy */}
                       {msg.sender === "ai" && msg.text && (
-                        <button
-                          onClick={() => handleCopy(msg.id, msg.text)}
-                          title="Copy response to clipboard"
-                          className={`absolute top-2 right-2 rounded-md p-1 opacity-0 group-hover/msg:opacity-100 transition-opacity ${
-                            isDark ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-800" : "text-slate-400 hover:text-purple-600 hover:bg-purple-50"
-                          }`}
-                        >
-                          {copiedMsgId === msg.id ? (
-                            <FaCheck className="text-[10px] text-emerald-400" />
-                          ) : (
-                            <FaCopy className="text-[10px]" />
-                          )}
-                        </button>
+                        <div className="absolute top-2 right-2 flex items-center gap-1 opacity-90 sm:opacity-0 group-hover/msg:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleSpeak(msg.id, msg.text)}
+                            type="button"
+                            title={speakingMsgId === msg.id ? "Stop reading" : "Read response aloud"}
+                            aria-label={speakingMsgId === msg.id ? "Stop reading" : "Read response aloud"}
+                            className={`rounded-md p-1 transition-all ${
+                              speakingMsgId === msg.id
+                                ? "text-cyan-400 bg-cyan-500/20 ring-1 ring-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)] animate-pulse"
+                                : isDark
+                                ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-800"
+                                : "text-slate-400 hover:text-purple-600 hover:bg-purple-50"
+                            }`}
+                          >
+                            {speakingMsgId === msg.id ? (
+                              <FaVolumeMute className="text-[10px]" />
+                            ) : (
+                              <FaVolumeUp className="text-[10px]" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => handleCopy(msg.id, msg.text)}
+                            type="button"
+                            title="Copy response to clipboard"
+                            aria-label="Copy response to clipboard"
+                            className={`rounded-md p-1 transition-all ${
+                              isDark ? "text-slate-400 hover:text-cyan-400 hover:bg-slate-800" : "text-slate-400 hover:text-purple-600 hover:bg-purple-50"
+                            }`}
+                          >
+                            {copiedMsgId === msg.id ? (
+                              <FaCheck className="text-[10px] text-emerald-400" />
+                            ) : (
+                              <FaCopy className="text-[10px]" />
+                            )}
+                          </button>
+                        </div>
                       )}
 
                       {msg.sender === "ai" && !msg.text && streamingMessageId === msg.id ? (
@@ -875,6 +1327,8 @@ const AIAssistantWidget = ({ isDark = false }) => {
                                 : "border-purple-300 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:border-purple-400 shadow-xs"
                             }`}
                           >
+                            {act.type === "project_modal" && <FaBookOpen className="text-[8px] sm:text-[9px]" />}
+                            {act.type === "resume_modal" && <FaFilePdf className="text-[8px] sm:text-[9px]" />}
                             {act.type === "link" && <FaExternalLinkAlt className="text-[8px] sm:text-[9px]" />}
                             {act.type === "download" && <FaDownload className="text-[8px] sm:text-[9px]" />}
                             {act.type === "scroll" && <FaArrowRight className="text-[8px] sm:text-[9px]" />}
@@ -991,6 +1445,18 @@ const AIAssistantWidget = ({ isDark = false }) => {
           </>
         )}
       </AnimatePresence>
+
+      {/* Fallback modals if not handled by root App */}
+      {localSelectedProject && (
+        <ProjectModal
+          project={localSelectedProject}
+          onClose={() => setLocalSelectedProject(null)}
+        />
+      )}
+      <ResumeModal
+        isOpen={localIsResumeOpen}
+        onClose={() => setLocalIsResumeOpen(false)}
+      />
     </div>
   );
 };

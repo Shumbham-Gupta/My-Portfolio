@@ -33,7 +33,7 @@ const MotionH2 = motion.h2;
 const MotionP = motion.p;
 const MotionDiv = motion.div;
 
-const projects = [
+export const projects = [
   {
     title: "TaskInfus — Enterprise EMS",
     category: "Enterprise SaaS (MERN)",
