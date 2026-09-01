@@ -1,7 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaDownload, FaFilePdf, FaGithub, FaLinkedin } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaFilePdf,
+  FaGithub,
+  FaLinkedin,
+  FaBolt,
+} from "react-icons/fa";
 import profilePic from "../assets/updatedProfile.webp";
 
 const MotionDiv = motion.div;
@@ -174,41 +180,99 @@ const Hero = ({ onOpenResume }) => {
           initial={{ opacity: 0, x: 36, scale: 0.94 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.9, ease: easeOutSmooth }}
-          className="relative mx-auto hidden w-full lg:block max-w-[200px] sm:max-w-[240px] lg:max-w-[280px]"
+          className="relative mx-auto hidden w-full lg:block max-w-[260px] sm:max-w-[290px] xl:max-w-[320px]"
         >
-          <MotionDiv
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="relative"
-          >
+          {/* Main Card Wrapper */}
+          <div className="relative">
+            {/* 1. Holographic Layer 1: Slow Rotating Conic Prism Halo */}
             <MotionDiv
-              animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.04, 1] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -inset-3 rounded-[2.4rem] bg-linear-to-br from-purple-600/30 via-transparent to-cyan-500/30 blur-xl"
-            ></MotionDiv>
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-3 sm:-inset-4 rounded-3xl bg-[conic-gradient(from_0deg,rgba(34,211,238,0.35),rgba(168,85,247,0.4),rgba(236,72,153,0.35),rgba(16,185,129,0.3),rgba(34,211,238,0.35))] blur-xl pointer-events-none opacity-75"
+            />
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--color-border)] bg-linear-to-br from-purple-600/20 via-white/10 to-cyan-500/20 p-3 shadow-[0_0_38px_rgba(139,92,246,0.28)]">
-              <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 to-cyan-500/10"></div>
-              <div className="relative flex aspect-[2/3] items-center justify-center overflow-hidden rounded-[1.55rem] bg-slate-100">
-                <img
-                  src={profilePic}
-                  alt="Shubham Gupta"
-                  className="h-full w-full object-contain object-center transition-transform duration-500 hover:scale-[1.03]"
+            {/* 2. Holographic Layer 2: Breathing Diffuse Nebula Aura */}
+            <MotionDiv
+              animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.08, 1] }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -inset-2 sm:-inset-3 rounded-3xl bg-linear-to-tr from-purple-600/35 via-cyan-400/25 to-pink-500/30 blur-2xl pointer-events-none"
+            />
+
+            {/* 3. Holographic Layer 3: Slim Cyber Prismatic Outer Frame */}
+            <MotionDiv
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="relative rounded-2xl sm:rounded-3xl p-[1.5px] bg-linear-to-r from-cyan-400/60 via-purple-500/60 to-pink-500/60 shadow-[0_0_35px_rgba(139,92,246,0.3),0_0_15px_rgba(34,211,238,0.2)] backdrop-blur-xl"
+            >
+              <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-1.5px)] p-1 sm:p-1.5 bg-white/10 dark:bg-slate-950/70 backdrop-blur-xl">
+                {/* 4. Holographic Layer 4: Sweeping Diagonal Light Beam Shimmer */}
+                <MotionDiv
+                  animate={{ x: ["-100%", "200%"] }}
+                  transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
+                  className="absolute inset-0 w-1/2 h-full bg-linear-to-r from-transparent via-white/15 to-transparent skew-x-[-25deg] pointer-events-none z-10"
                 />
-              </div>
-            </div>
-          </MotionDiv>
 
-          <div className="mt-5 flex justify-center gap-3">
+                <div className="relative flex aspect-[2/3] items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl bg-linear-to-b from-slate-100 via-slate-200 to-slate-300 dark:from-slate-900/80 dark:via-slate-950 dark:to-slate-900 border border-white/20">
+                  <img
+                    src={profilePic}
+                    alt="Shubham Gupta - Full Stack Developer"
+                    className="h-full w-full object-contain object-center transition-transform duration-500 hover:scale-[1.04]"
+                  />
+                </div>
+              </div>
+            </MotionDiv>
+
+            {/* FLOATING BADGE 1: Top-Right (Active Role at LaunchEd Global) */}
+            <MotionDiv
+              animate={{ y: [0, -8, 0], x: [0, 3, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-3 -right-6 z-20 flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-white/90 dark:bg-slate-900/90 px-3 py-2 shadow-[0_8px_25px_rgba(16,185,129,0.25)] backdrop-blur-md"
+            >
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+              </span>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 leading-tight">
+                  Lead Dev @ LaunchEd
+                </span>
+                <span className="text-[8px] text-[var(--color-subtle)] font-medium leading-none mt-0.5">
+                  React 19 &bull; Live Platform
+                </span>
+              </div>
+            </MotionDiv>
+
+            {/* FLOATING BADGE 2: Bottom-Left (MERN & High Scale) */}
+            <MotionDiv
+              animate={{ y: [0, 8, 0], x: [0, -3, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+              className="absolute -bottom-4 -left-6 z-20 flex items-center gap-2 rounded-xl border border-cyan-400/40 bg-white/90 dark:bg-slate-900/90 px-3 py-2 shadow-[0_8px_25px_rgba(34,211,238,0.25)] backdrop-blur-md"
+            >
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-500 dark:text-cyan-400 border border-cyan-400/30">
+                <FaBolt className="text-xs" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] font-bold text-[var(--color-text)] leading-tight">
+                  Full-Stack MERN
+                </span>
+                <span className="text-[8px] text-cyan-600 dark:text-cyan-400 font-semibold leading-none mt-0.5">
+                  9+ Production Projects
+                </span>
+              </div>
+            </MotionDiv>
+          </div>
+
+          {/* Social Dock Below Profile */}
+          <div className="mt-6 flex items-center justify-center gap-3">
             {[
               {
                 href: "https://github.com/Shumbham-Gupta",
-                label: "GitHub",
+                label: "GitHub Profile",
                 icon: <FaGithub />,
               },
               {
                 href: "https://www.linkedin.com/in/shubham16gupta/",
-                label: "LinkedIn",
+                label: "LinkedIn Profile",
                 icon: <FaLinkedin />,
               },
             ].map(({ href, label, icon }, index) => (
@@ -223,7 +287,7 @@ const Hero = ({ onOpenResume }) => {
                 transition={{ delay: 0.9 + index * 0.1, duration: 0.5, ease: easeOutSmooth }}
                 whileHover={{ y: -4, scale: 1.12 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-border)] text-purple-500 transition-colors hover:border-cyan-400 hover:text-cyan-500"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] text-purple-600 dark:text-cyan-400 shadow-sm transition-all hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.4)]"
               >
                 {icon}
               </MotionA>
